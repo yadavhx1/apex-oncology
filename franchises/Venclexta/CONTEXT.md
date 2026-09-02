@@ -63,17 +63,40 @@ that are in fact correct for the moment they were produced.
 
 ## Business rules
 
-`TODO` — the rules that materially shape output. This is the highest-value section of
-this file and the one agents rely on most, because these rules are not recoverable from
-the code alone.
-
-For each rule state what it is, why it exists, and where it is implemented:
+The rules that materially shape output. This is the highest-value section of this file
+and the one agents rely on most, because these rules are not recoverable from the code
+alone.
 
 | Rule | Rationale | Where implemented |
 |---|---|---|
-| `TODO` | `TODO` | `configuration/…` or `scripts/…` |
+| Grace period by product | Decides whether two claims fall in the same treatment episode. Longer grace merges claims into one episode; shorter grace splits them into separate lines. | `configuration/aml_dos_grace.yaml` → `products.<PRODUCT>.grace` |
+| Days of supply — RX claims | Use the claim's own `PRODUCT_DAYS_SUPPLY`. When missing or non-positive, fall back to 28 days. | `configuration/aml_dos_grace.yaml` → `dos.rx_fallback_days_supply` |
+| Days of supply — PX claims | Medical-benefit claims carry no days supply, so a per-product value stands in. Orals have no PX value and yield NULL. | `configuration/aml_dos_grace.yaml` → `products.<PRODUCT>.dos_px` |
+| Filgrastim excluded | Supportive care, not a treatment product — it must not create or extend a line of therapy. | `configuration/aml_dos_grace.yaml` → `product_exclusions` |
+| Unlisted products yield NULL | A product nobody has reviewed gets no grace and no PX days supply, rather than inheriting a default that would silently place it in a line of therapy. | `grace.default: null`; PX `CASE` has no `ELSE` |
 
-Candidates specific to this franchise:
+To change any of the above, use the `/update-dos-grace` skill. It walks the change,
+validates the result, and prompts for the follow-ups. `TODO` — record the business
+rationale for each grace value as it is confirmed with the stakeholder; the values were
+inherited from the notebook and their original reasoning is not documented.
+
+### Cytarabine grace asymmetry — needs a decision
+
+The three cytarabine variants do not share a grace value:
+
+| Product | Grace |
+|---|---|
+| `L-DAC` | 60 days |
+| `S-DAC` | 7 days |
+| `HI-DAC` | 7 days |
+
+Carried over from the notebook as it stood, and preserved rather than corrected during
+the move to configuration. `TODO` — confirm with the business stakeholder whether the
+L-DAC value is intentional. If it is, record why here. If it is not, changing it to 7
+will move reported lines of therapy for low-dose cytarabine patients, so it needs
+sign-off rather than a quiet fix.
+
+### Still to record
 
 - Combination-regimen attribution — how TRx is credited when Venclexta is one component.
 - Indication assignment where a patient's indication is not stated directly.
@@ -101,7 +124,7 @@ resolved at run time.
 
 | File | Purpose |
 |---|---|
-| `TODO` | `TODO` |
+| [`aml_dos_grace.yaml`](configuration/aml_dos_grace.yaml) | Grace period and days-of-supply values by product for AML line-of-therapy validation, plus the RX days-supply fallback and excluded products. Update with `/update-dos-grace`. |
 
 ## Scripts
 

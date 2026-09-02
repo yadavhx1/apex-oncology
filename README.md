@@ -120,6 +120,16 @@ Resolution path: franchise context → manifest → script → configuration. `E
 | [`docs/conventions.md`](docs/conventions.md) | Naming, placement, manifest fields, annotation depth |
 | [`docs/data-dictionary.md`](docs/data-dictionary.md) | Authoritative table, field and metric definitions |
 
+## Skills
+
+Guided, validated procedures for changes that are easy to get wrong. Prefer the skill
+over editing the target file freehand — each one shows current state, confirms before
+writing, validates after, and prompts for the follow-ups.
+
+| Skill | Purpose |
+|---|---|
+| [`/update-dos-grace`](.claude/skills/update-dos-grace/SKILL.md) | Update DOS or GRACE values for AML line-of-therapy validation (Venclexta) — one product, several, all, or a new entry |
+
 ## Adding a franchise
 
 Copy `templates/`; don't hand-roll. Steps and checklist:

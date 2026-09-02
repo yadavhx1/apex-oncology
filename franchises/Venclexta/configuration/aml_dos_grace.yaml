@@ -1,0 +1,204 @@
+# AML line-of-therapy validation — DOS and GRACE assignment by product.
+#
+# Consumed by scripts/AML_LOT_VAL.ipynb via scripts/dos_grace_config.py, which builds
+# the GRACE_VALUE and DOS_FINAL CASE expressions from this file. Values were previously
+# hardcoded in the notebook SQL.
+#
+# TO UPDATE THIS FILE, USE THE SKILL:  /update-dos-grace
+# It handles all-products, selected-products and new-product changes, and validates
+# the result. Manual edits are fine too — run the validator afterwards:
+#
+#     python franchises/Venclexta/scripts/validate_dos_grace.py
+#
+# Changing a value here changes reported lines of therapy. Treat it as
+# production-affecting: see AGENTS.md §6 and docs/agent-workflows.md workflow 5.
+
+schema_version: 1
+
+meta:
+  franchise: Venclexta
+  purpose: >-
+    Grace period and days-of-supply values by product, used to build treatment
+    episodes for AML line-of-therapy validation.
+  owner: TODO
+  consumed_by:
+    - scripts/AML_LOT_VAL.ipynb
+  source_column: FINAL_PRODUCT_NAME     # column the CASE expressions switch on
+
+# ---------------------------------------------------------------------------
+# DOS (days of supply) rules that are not per-product.
+# ---------------------------------------------------------------------------
+dos:
+  # NATIVE_TYPE = 'RX': use the claim's PRODUCT_DAYS_SUPPLY. When it is missing or
+  # non-positive, fall back to this many days.
+  rx_fallback_days_supply: 28
+
+  # NATIVE_TYPE = 'PX': taken from products.<PRODUCT>.dos_px below.
+  # A product with dos_px: null yields NULL — matching the original SQL, whose PX
+  # CASE had no ELSE branch.
+
+# ---------------------------------------------------------------------------
+# GRACE rules that are not per-product.
+# ---------------------------------------------------------------------------
+grace:
+  # Product not listed below, or listed with grace: null -> GRACE_VALUE is NULL.
+  # This reproduces the original `ELSE NULL`.
+  default: null
+
+# ---------------------------------------------------------------------------
+# Products excluded before DOS/GRACE assignment.
+# Applied as: WHERE FINAL_PRODUCT_NAME NOT IN (...)
+# ---------------------------------------------------------------------------
+product_exclusions:
+  - FILGRASTIM                          # supportive care, not a treatment product
+
+# ---------------------------------------------------------------------------
+# Per-product values.
+#
+#   grace   GRACE_VALUE in days. null -> NULL.
+#   dos_px  DOS_FINAL for PX (medical-benefit) claims, in days.
+#           null -> NULL, and is correct for oral products, which appear only as RX.
+#   notes   Why the value is what it is. Keep to one line.
+#
+# One entry per product, alphabetical. A product's grace and dos_px sit together
+# deliberately: the previous grouped-by-value SQL made it possible for a product to
+# land in two grace branches, and made "what are this product's values" hard to answer.
+#
+# Products are listed once each — 28 products, 17 of which have a PX days-of-supply.
+# The 11 with dos_px: null are orals dispensed through pharmacy only.
+# ---------------------------------------------------------------------------
+products:
+
+  ARSENIC_TRIOXIDE:
+    grace: 60
+    dos_px: 28
+    notes: 28-day cycle
+
+  AZACITIDINE:
+    grace: 60
+    dos_px: 28
+    notes: 28-day cycle
+
+  CLADRIBINE:
+    grace: 7
+    dos_px: 1
+
+  CLOFARABINE:
+    grace: 5
+    dos_px: 1
+
+  CYCLOPHOSPHAMIDE:
+    grace: 5
+    dos_px: 1
+
+  DAUNORUBICIN:
+    grace: 5
+    dos_px: 1
+
+  DAURISMO:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  DECITABINE:
+    grace: 60
+    dos_px: 28
+    notes: 28-day cycle
+
+  ETOPOSIDE:
+    grace: 5
+    dos_px: 1
+
+  FLUDARABINE:
+    grace: 5
+    dos_px: 1
+
+  HI-DAC:
+    grace: 7
+    dos_px: 1
+    notes: High-dose cytarabine. Grace differs from L-DAC — see the DAC note below.
+
+  IDARUBICIN:
+    grace: 5
+    dos_px: 1
+
+  IDHIFA:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  INQOVI:
+    grace: 28
+    dos_px: null                        # oral — RX only
+
+  L-DAC:
+    grace: 60
+    dos_px: 1
+    notes: Low-dose cytarabine. Grace 60 — deliberately unlike HI-DAC and S-DAC at 7.
+
+  MITOXANTRONE:
+    grace: 3
+    dos_px: 1
+
+  MYLOTARG:
+    grace: 7
+    dos_px: 1
+
+  NEXAVAR:
+    grace: 18
+    dos_px: null                        # oral — RX only
+
+  ONUREG:
+    grace: 28
+    dos_px: null                        # oral — RX only
+
+  REZLIDHIA:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  RYDAPT:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  S-DAC:
+    grace: 7
+    dos_px: 1
+    notes: Standard-dose cytarabine. Grace differs from L-DAC — see the DAC note below.
+
+  TIBSOVO:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  VANFLYTA:
+    grace: 28
+    dos_px: null                        # oral — RX only
+
+  VENCLEXTA:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+  VINCRISTINE:
+    grace: 28
+    dos_px: 1
+
+  VYXEOS:
+    grace: 5
+    dos_px: 1
+
+  XOSPATA:
+    grace: 60
+    dos_px: null                        # oral — RX only
+
+# ---------------------------------------------------------------------------
+# DAC note — carried over from the original SQL, flagged because it surprises people.
+#
+# The three cytarabine variants do NOT share a grace value:
+#
+#     L-DAC   60      (grouped with the oral / 28-day-cycle products)
+#     S-DAC    7
+#     HI-DAC   7
+#
+# This asymmetry is reproduced from the notebook as it stood; it is preserved here
+# rather than corrected. If it is intentional, record the reason in CONTEXT.md under
+# business rules. If it is not, changing L-DAC to 7 will move reported lines of
+# therapy for low-dose cytarabine patients — route it through the franchise's business
+# stakeholder before changing it.
+# ---------------------------------------------------------------------------

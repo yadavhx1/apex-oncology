@@ -23,38 +23,96 @@ franchise:
 # Configuration files in this franchise, and what each supplies.
 # Paths are relative to franchises/Venclexta/.
 # ---------------------------------------------------------------------------
-configuration: []
-# - path: configuration/market_filters.yaml
-#   purpose: Product and market code lists applied across reporting extracts.
+configuration:
+  - path: configuration/aml_dos_grace.yaml
+    purpose: >-
+      Grace period and days-of-supply values by product for AML line-of-therapy
+      validation, plus the RX days-supply fallback and excluded products.
+    production_affecting: true
+    update_with: /update-dos-grace
 
 # ---------------------------------------------------------------------------
 # Script inventory. One entry per file in scripts/.
-#
-# Empty until the franchise's workloads are migrated in. An empty list means
-# "no scripts registered yet" — it does not mean "look in scripts/ instead".
 # ---------------------------------------------------------------------------
-scripts: []
+scripts:
 
-# Copy this block per script. Every field is expected; use [] or "none" rather
-# than omitting a field, so a reader can tell "nothing" from "not recorded".
-#
-# - name: trx_monthly.sql
-#   type: sql                          # python | sql | notebook
-#   purpose: Monthly TRx by HCP and account for franchise reporting.
-#   owner: TODO
-#   schedule: monthly                  # or: ad-hoc
-#   configuration:
-#     - configuration/market_filters.yaml
-#     - configuration/source_tables.yaml
-#   source_tables:
-#     - ALL_CLAIMS_COMBINED_FACT_VW
-#     - PRODUCT_XREF
-#   outputs:
-#     - VENCLEXTA_TRX_MONTHLY
-#   user_inputs:
-#     - reporting_period_end           # blank in the script; supplied at run time
-#     - market_code
-#   depends_on: []                     # other scripts that must run first
-#   notes: >-
-#     Anything a reader needs that the fields above don't carry — combination-regimen
-#     attribution applied, known caveats, indications in scope.
+  - name: AML_LOT_VAL.ipynb
+    type: notebook
+    purpose: >-
+      AML line-of-therapy validation — builds the treatment table with DOS and GRACE
+      assigned per product, then derives episodes, regimens and lines of therapy.
+    owner: TODO
+    schedule: ad-hoc                    # validation notebook, not orchestrated
+    configuration:
+      - configuration/aml_dos_grace.yaml
+    source_tables:
+      - TODO                            # resolved at run time from the CWS schema
+    outputs:
+      - TODO                            # MABI_AML_* tables in the CWS schema
+    user_inputs:
+      - cws                             # target schema, set in the GLOBAL VARIABLES cell
+      - data_period                     # reporting period used when staging the Tx table
+    depends_on: []
+    notes: >-
+      DOS and GRACE were hardcoded in the SQL; they now come from
+      configuration/aml_dos_grace.yaml via scripts/dos_grace_config.py. Requires
+      pldlib.egg and a Spark session. Outputs are stripped in version control —
+      clear them again before committing. Source and output table names still need
+      recording; the notebook builds them from the `cws` schema variable.
+
+  - name: dos_grace_config.py
+    type: python
+    purpose: >-
+      Load and validate the DOS/GRACE configuration and build the GRACE_VALUE and
+      DOS_FINAL CASE expressions consumed by AML_LOT_VAL.ipynb.
+    owner: TODO
+    schedule: ad-hoc                    # imported, not run directly
+    configuration:
+      - configuration/aml_dos_grace.yaml
+    source_tables: []
+    outputs: []
+    user_inputs: []
+    depends_on: []
+    notes: >-
+      Pure configuration handling — no Spark dependency, so it is testable without a
+      cluster. Rejects malformed configuration rather than substituting defaults: a
+      silently dropped product would change reported lines of therapy.
+
+  - name: validate_dos_grace.py
+    type: python
+    purpose: >-
+      Validate the DOS/GRACE configuration and show what it will apply, before a
+      change reaches a query.
+    owner: TODO
+    schedule: ad-hoc
+    configuration:
+      - configuration/aml_dos_grace.yaml
+    source_tables: []
+    outputs: []
+    user_inputs: []
+    depends_on:
+      - dos_grace_config.py
+    notes: >-
+      Run from franchises/Venclexta/scripts/. Supports --sql to print the generated
+      SQL and --product to inspect one product. Used as the verification step of the
+      /update-dos-grace skill. Exit 0 = valid.
+
+  - name: test_dos_grace_config.py
+    type: python
+    purpose: >-
+      Prove the configuration reproduces the values originally hardcoded in the
+      notebook, and that the generated SQL matches the configuration.
+    owner: TODO
+    schedule: ad-hoc
+    configuration:
+      - configuration/aml_dos_grace.yaml
+    source_tables: []
+    outputs: []
+    user_inputs: []
+    depends_on:
+      - dos_grace_config.py
+    notes: >-
+      Holds MIGRATION_BASELINE_* — a frozen snapshot of the original hardcoded
+      values. An intentional value change is EXPECTED to fail these tests; update the
+      baseline in the same commit with the business reason. Runs under pytest or
+      standalone.

@@ -73,8 +73,13 @@ say which reading you favour and why.
 
 ## Workflow 5 — Assess blast radius before a config change
 
-Configuration under `franchises/*/configuration/` is production-affecting. Before
-changing it:
+**Check for a skill first.** Some configuration has a guided procedure that already
+handles scoping, validation and follow-ups — see the skills table in
+[`README.md`](../README.md). For DOS and GRACE values in Venclexta, use
+`/update-dos-grace` rather than editing the YAML freehand.
+
+Otherwise, configuration under `franchises/*/configuration/` is production-affecting.
+Before changing it:
 
 1. Search within the franchise for every script referencing that config file, and
    cross-check against `manifest.yaml`.

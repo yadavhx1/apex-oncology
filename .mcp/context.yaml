@@ -90,6 +90,20 @@ documentation:
   - path: docs/assets/apex-oncology-architecture.png
     title: Architecture diagram (image)
 
+# ---------------------------------------------------------------------------
+# Repository skills — guided, validated procedures for changes that are easy to get
+# wrong. Prefer the skill over editing the target file freehand.
+# ---------------------------------------------------------------------------
+skills:
+  - name: update-dos-grace
+    path: .claude/skills/update-dos-grace/SKILL.md
+    franchise: Venclexta
+    description: >-
+      Update DOS or GRACE values for AML line-of-therapy validation — one product,
+      several, all, or a new entry. Validates the result and prompts for follow-ups.
+    target: franchises/Venclexta/configuration/aml_dos_grace.yaml
+    production_affecting: true
+
 templates:
   add_franchise: templates/TEMPLATE_FRANCHISE.md
   franchise_context: templates/franchise/CONTEXT.md
