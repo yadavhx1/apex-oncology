@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# apex-oncology — text, diff and notebook handling.
+#
+# Contributors work across Windows, macOS and Linux, so normalise line endings
+# in the repository and let Git check out the platform-native form.
+# ---------------------------------------------------------------------------
+
+# Default: let Git detect text and normalise to LF in the repository.
+* text=auto eol=lf
+
+# --- Source and configuration ---------------------------------------------
+*.py     text diff=python
+*.sql    text
+*.r      text
+*.R      text
+*.sas    text
+*.sh     text eol=lf
+*.ps1    text eol=crlf
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+
+*.yaml   text
+*.yml    text
+*.json   text
+*.toml   text
+*.ini    text
+*.cfg    text
+
+*.md     text diff=markdown
+*.txt    text
+*.html   text diff=html
+*.css    text
+*.js     text
+
+.gitignore      text
+.gitattributes  text
+.gitkeep        text
+
+# --- Notebooks -------------------------------------------------------------
+# Treated as text so changes are reviewable. Outputs must be CLEARED before
+# committing — they routinely contain real data, and a stripped notebook also
+# diffs far more usefully. See AGENTS.md §6.
+*.ipynb  text

@@ -1,0 +1,185 @@
+# ---------------------------------------------------------------------------
+# apex-oncology — ignore generated and local artifacts.
+#
+# This repository holds CONFIGURATION AND CODE, never data and never secrets.
+# The patterns below are a safety net, not a substitute for care: check what you
+# are staging. See AGENTS.md §6.
+# ---------------------------------------------------------------------------
+
+# --- Secrets ---------------------------------------------------------------
+# Configuration names a secret; the value resolves from the environment or a
+# vault at run time. Nothing here should ever be committed.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.keytab
+credentials
+credentials.*
+secrets.yaml
+secrets.yml
+secrets.json
+*secret*.yaml
+*secret*.yml
+*secret*.json
+*credential*.yaml
+*credential*.yml
+*credential*.json
+.netrc
+.pgpass
+connection_strings.*
+
+# --- Data ------------------------------------------------------------------
+# No extracts, result sets or patient-level data in tracked files.
+# Config and template YAML/JSON are tracked; tabular data is not.
+*.csv
+*.tsv
+*.psv
+*.dat
+*.xls
+*.xlsx
+*.xlsm
+*.parquet
+*.avro
+*.orc
+*.feather
+*.pkl
+*.pickle
+*.sas7bdat
+*.sav
+*.rds
+*.RData
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+*.zip
+*.gz
+*.tar
+*.tgz
+*.7z
+*.rar
+
+# Common output locations
+data/
+extracts/
+exports/
+output/
+outputs/
+results/
+tmp/
+temp/
+scratch/
+
+# --- Notebooks -------------------------------------------------------------
+# Clear outputs before committing — they routinely contain real data.
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+*.nbconvert.ipynb
+
+# --- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+.conda/
+conda-meta/
+
+# Testing and type checking
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.cover
+.hypothesis/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# --- R / SAS ---------------------------------------------------------------
+.Rhistory
+.Rapp.history
+.Rproj.user/
+*.Rproj
+*.log
+*.lst
+
+# --- Editors and IDEs ------------------------------------------------------
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+.ropeproject
+
+# --- Operating system ------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# --- Local agent / tool state ----------------------------------------------
+# Shared agent guidance (AGENTS.md, CLAUDE.md, GEMINI.md, .mcp/context.yaml,
+# .github/copilot-instructions.md) IS tracked. Only per-user local state is not.
+.claude/settings.local.json
+.claude/local/
+.mcp/local/
+.aider*
+.cursorignore
+
+# --- Miscellaneous ---------------------------------------------------------
+*.bak
+*.orig
+*.rej
+*.tmp
+*.old
+*.save
+*~$*

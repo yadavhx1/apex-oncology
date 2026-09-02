@@ -1,0 +1,137 @@
+# TEMPLATE — expected shape of a configuration file.
+#
+# Copy the relevant sections into franchises/<Franchise>/configuration/<name>.yaml.
+# This file is documentation, not a config consumed at run time.
+#
+# Conventions: docs/conventions.md
+#
+# Two rules govern everything below:
+#
+#   1. Everything configurable lives in configuration — parameters, database and
+#      schema names, paths, thresholds, business-rule values, product and market
+#      code lists. If it might differ between environments, or change without a
+#      change in logic, it is configuration.
+#
+#   2. NEVER a secret value. Configuration names a secret; the value resolves from
+#      the environment or a vault at run time.
+
+schema_version: 1
+
+# ---------------------------------------------------------------------------
+# Metadata — what this file is for and who owns it.
+# ---------------------------------------------------------------------------
+meta:
+  franchise: TODO                 # PascalCase brand name
+  purpose: TODO                   # one line: what this file supplies
+  owner: TODO
+  consumed_by:                    # scripts reading this file; mirrors manifest.yaml
+    - TODO
+
+# ---------------------------------------------------------------------------
+# Data sources. Names and locations only — never credentials.
+# ---------------------------------------------------------------------------
+sources:
+  warehouse:
+    database: TODO
+    schema: TODO
+    host: TODO
+
+    # Reference a secret by NAME. The value is resolved at run time from the
+    # environment or a vault and never appears in a tracked file.
+    credential_ref: TODO          # e.g. APEX_WAREHOUSE_PWD
+
+    # NEVER do this:
+    # password: hunter2
+    # connection_string: "Server=...;Password=..."
+    # api_key: sk-...
+
+  tables:
+    # Logical name -> physical table. Keeps physical names out of the SQL, so a
+    # table move is a config change rather than a code change.
+    claims: TODO
+    product_reference: TODO
+
+# ---------------------------------------------------------------------------
+# Reporting parameters.
+#
+# Values a user supplies per run stay EMPTY here. An empty value is a deliberate
+# run-time input — agents surface it and never autofill it. Record it under
+# `user_inputs` in the script's manifest entry too.
+# ---------------------------------------------------------------------------
+reporting:
+  period_start: ""                # USER INPUT — blank by design
+  period_end: ""                  # USER INPUT — blank by design
+
+  # Values with a stable default are set here rather than left blank.
+  calendar: fiscal                # fiscal | calendar
+  currency: USD
+
+# ---------------------------------------------------------------------------
+# Filters. Code lists belong here, not in the SQL — they change without any
+# change in logic.
+# ---------------------------------------------------------------------------
+filters:
+  market_code: ""                 # USER INPUT — blank by design
+  product_codes: []               # empty = USER INPUT, or all products; say which
+  indications: []
+  geographies: []
+
+  # Comment the BUSINESS MEANING of a value, not its type.
+  # Good: TRx floor below which an account is suppressed from reporting
+  # Bad:  integer
+  exclude_test_accounts: true
+
+# ---------------------------------------------------------------------------
+# Business rules. Values that encode a business decision.
+#
+# Each should be traceable to the franchise CONTEXT.md business rules table.
+# A rule implemented here but undocumented there is the most common cause of
+# numbers that stop reconciling.
+# ---------------------------------------------------------------------------
+business_rules:
+  # TRx floor below which an account is suppressed from reporting
+  suppression_threshold: TODO
+
+  # Days without therapy that end a treatment episode
+  persistence_gap_days: TODO
+
+  # Whether ramp-up administrations count toward reported volume
+  include_step_up_doses: TODO
+
+# ---------------------------------------------------------------------------
+# Outputs. Destinations only.
+# ---------------------------------------------------------------------------
+outputs:
+  database: TODO
+  schema: TODO
+  table: TODO
+  write_mode: overwrite           # overwrite | append
+
+  # Paths, never data. This repository holds no data — see AGENTS.md §6.
+  export_path: TODO
+
+# ---------------------------------------------------------------------------
+# Notes
+# ---------------------------------------------------------------------------
+#
+# File organisation: group by business concern — market_filters.yaml,
+# source_tables.yaml, output_targets.yaml — rather than one config.yaml per
+# script. Several scripts sharing a filter set is the normal case.
+#
+# Prefer YAML over JSON. It takes comments, which is most of the value.
+#
+# Naming: snake_case for filenames and keys.
+#
+# Register every config file in the franchise manifest.yaml under `configuration:`
+# with its purpose, and list it in the `configuration` field of each script that
+# consumes it.
+#
+# Checklist before committing a config file:
+#
+#   [ ] No credential, token, connection string, API key or password VALUES
+#   [ ] Secrets referenced by name only
+#   [ ] No data values, sample rows or extracts
+#   [ ] Deliberately blank user inputs left blank, and recorded in the manifest
+#   [ ] Business-rule values traceable to CONTEXT.md
+#   [ ] Comments explain business meaning, not type
+#   [ ] Registered in manifest.yaml

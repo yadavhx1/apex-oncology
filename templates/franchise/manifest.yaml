@@ -1,0 +1,63 @@
+# TEMPLATE — franchise script inventory and dependency metadata.
+#
+# Copy to franchises/<Franchise>/manifest.yaml and complete the franchise block.
+# Leave `scripts` and `configuration` empty at first; they grow as workloads land.
+#
+# Onboarding steps: templates/TEMPLATE_FRANCHISE.md
+# Field reference:  templates/script-metadata.yaml
+# Conventions:      docs/conventions.md
+#
+# This file is the authoritative inventory for the franchise's scripts/ directory.
+# Agents read it INSTEAD of traversing the filesystem, so an unregistered script is
+# invisible to agents, to MCP and to reviewers.
+#
+# Register a script in the SAME change that adds or renames it.
+# If this file and a script disagree, the SCRIPT is authoritative and this file is
+# stale — fix it and report the drift.
+
+schema_version: 1
+
+franchise:
+  name: TODO                      # PascalCase brand name, e.g. Venclexta
+  generic_name: TODO              # e.g. venetoclax
+  context: CONTEXT.md
+  owner: TODO                     # analytics owner accountable for this franchise
+
+# ---------------------------------------------------------------------------
+# Configuration files in this franchise, and what each supplies.
+# Paths are relative to the franchise directory.
+# ---------------------------------------------------------------------------
+configuration: []
+# - path: configuration/market_filters.yaml
+#   purpose: Product and market code lists applied across reporting extracts.
+# - path: configuration/source_tables.yaml
+#   purpose: Database, schema and table names for source feeds.
+
+# ---------------------------------------------------------------------------
+# Script inventory. One entry per file in scripts/.
+#
+# An empty list means "no scripts registered yet" — it does not mean
+# "look in scripts/ instead".
+# ---------------------------------------------------------------------------
+scripts: []
+
+# Copy this block per script. Every field is expected; use [] or "none" rather than
+# omitting a field, so a reader can tell "nothing" from "not recorded".
+#
+# - name: TODO.sql                    # filename as it appears in scripts/
+#   type: sql                         # python | sql | notebook
+#   purpose: TODO                     # one line: what it produces and why
+#   owner: TODO
+#   schedule: TODO                    # e.g. monthly, weekly, ad-hoc
+#   configuration:                    # config files this script consumes
+#     - configuration/TODO.yaml
+#   source_tables:                    # tables, views and files it reads
+#     - TODO
+#   outputs:                          # tables, files or reports it writes
+#     - TODO
+#   user_inputs:                      # run-time inputs the user must supply
+#     - TODO                          # blank in the script; never autofilled
+#   depends_on: []                    # other scripts that must run first
+#   notes: >-
+#     Anything a reader needs that the fields above don't carry — business rules
+#     applied, known caveats, indications in scope, dated definitional breaks.

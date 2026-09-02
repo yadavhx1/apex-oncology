@@ -1,0 +1,171 @@
+# apex-oncology — machine-readable repository map and MCP discovery metadata.
+#
+# This file lets an agent or MCP server understand the repository without walking
+# the filesystem. Keep it in sync when structure changes: adding a franchise, adding
+# a docs page, or changing the context chain.
+#
+# Human-readable equivalent: AGENTS.md and docs/architecture.md
+
+schema_version: 1
+
+repository:
+  name: apex-oncology
+  description: >-
+    Configuration and analytical workloads (Python, SQL, Jupyter notebooks) for
+    multiple oncology franchises. Each franchise is self-contained.
+  therapy_area: Oncology
+  default_branch: main
+
+# ---------------------------------------------------------------------------
+# Entry points — where an agent should start reading.
+# ---------------------------------------------------------------------------
+entry_points:
+  primary: AGENTS.md
+  by_client:
+    claude: CLAUDE.md
+    gemini: GEMINI.md
+    copilot: .github/copilot-instructions.md
+
+# Ordered resolution path. Follow only as far as the question requires.
+context_chain:
+  - path: AGENTS.md
+    purpose: Global operating rules, conventions, safety.
+  - path: .mcp/context.yaml
+    purpose: This file — repository map and discovery metadata.
+  - path: franchises/{franchise}/CONTEXT.md
+    purpose: Business and technical context for one franchise.
+  - path: franchises/{franchise}/manifest.yaml
+    purpose: Script inventory with declared inputs, outputs, config dependencies.
+  - path: franchises/{franchise}/scripts/{script}
+    purpose: The workload itself.
+  - path: franchises/{franchise}/configuration/
+    purpose: Config files the script consumes. Read only what the manifest names.
+
+# ---------------------------------------------------------------------------
+# Franchises. Scope retrieval to exactly one unless the request is cross-franchise.
+# ---------------------------------------------------------------------------
+franchises:
+  - name: Venclexta
+    path: franchises/Venclexta
+    generic_name: venetoclax
+    context: franchises/Venclexta/CONTEXT.md
+    manifest: franchises/Venclexta/manifest.yaml
+    configuration: franchises/Venclexta/configuration
+    scripts: franchises/Venclexta/scripts
+
+  - name: Epkinly
+    path: franchises/Epkinly
+    generic_name: epcoritamab
+    context: franchises/Epkinly/CONTEXT.md
+    manifest: franchises/Epkinly/manifest.yaml
+    configuration: franchises/Epkinly/configuration
+    scripts: franchises/Epkinly/scripts
+
+  - name: Imbruvica
+    path: franchises/Imbruvica
+    generic_name: ibrutinib
+    context: franchises/Imbruvica/CONTEXT.md
+    manifest: franchises/Imbruvica/manifest.yaml
+    configuration: franchises/Imbruvica/configuration
+    scripts: franchises/Imbruvica/scripts
+
+# ---------------------------------------------------------------------------
+# Shared documentation.
+# ---------------------------------------------------------------------------
+documentation:
+  - path: README.md
+    title: Overview and quick start
+  - path: docs/architecture.md
+    title: Architecture, ownership and dependency model
+  - path: docs/agent-workflows.md
+    title: Recommended agent workflows for discovery and code change
+  - path: docs/mcp-integration.md
+    title: MCP resources, tools and retrieval strategy
+  - path: docs/conventions.md
+    title: Naming, metadata and authoring conventions
+  - path: docs/data-dictionary.md
+    title: Table and field definitions — authoritative for descriptions
+  - path: docs/repo-structure.html
+    title: Interactive repository structure diagram
+  - path: docs/assets/apex-oncology-architecture.png
+    title: Architecture diagram (image)
+
+templates:
+  add_franchise: templates/TEMPLATE_FRANCHISE.md
+  franchise_context: templates/franchise/CONTEXT.md
+  franchise_manifest: templates/franchise/manifest.yaml
+  script_header: templates/TEMPLATE_SCRIPT.md
+  script_metadata: templates/script-metadata.yaml
+  config_schema: templates/config_schema.yaml
+
+# ---------------------------------------------------------------------------
+# Workloads present in this repository.
+# ---------------------------------------------------------------------------
+workloads:
+  - type: python
+    extensions: [".py"]
+  - type: sql
+    extensions: [".sql"]
+  - type: notebook
+    extensions: [".ipynb"]
+  - type: config
+    extensions: [".yaml", ".yml", ".json"]
+
+# ---------------------------------------------------------------------------
+# Suggested MCP surface. An MCP server over this repository should expose narrow
+# resources rather than whole-repo file access, so agents retrieve scoped context.
+# See docs/mcp-integration.md for detail.
+# ---------------------------------------------------------------------------
+mcp:
+  resources:
+    - uri: apex://repo/context
+      tool: get_repo_context
+      description: Global rules and repository map. Reads AGENTS.md and this file.
+      parameters: []
+
+    - uri: apex://franchise/{franchise}/context
+      tool: get_franchise_context
+      description: Business and technical context for one franchise.
+      parameters: [franchise]
+
+    - uri: apex://franchise/{franchise}/manifest
+      tool: get_franchise_manifest
+      description: Script inventory and dependency metadata for one franchise.
+      parameters: [franchise]
+
+    - uri: apex://franchise/{franchise}/script/{script}/dependencies
+      tool: get_script_dependencies
+      description: >-
+        Config files, source tables and outputs a single script depends on,
+        resolved from the manifest.
+      parameters: [franchise, script]
+
+    - uri: apex://search
+      tool: search_context
+      description: >-
+        Search context and documentation. Pass franchise to scope the search;
+        omit only for genuinely cross-franchise questions.
+      parameters: [query, "franchise (optional)"]
+
+  retrieval_rules:
+    - Scope to a single franchise unless the request is explicitly cross-franchise.
+    - Prefer manifest metadata over filesystem traversal or repo-wide search.
+    - Read only the configuration files the manifest names for the target script.
+    - Never return secrets or patient-level data; this repository should contain neither.
+    - If the manifest and a script disagree, the script is authoritative — report drift.
+
+# ---------------------------------------------------------------------------
+# Constraints that apply to every agent operation.
+# ---------------------------------------------------------------------------
+safety:
+  never_commit:
+    - credentials, tokens, connection strings, API keys, passwords
+    - patient-level or otherwise identifiable data
+    - notebook outputs
+    - data extracts or result sets
+  production_sensitive:
+    - franchises/*/configuration/
+  do_not:
+    - Execute scripts against production data sources to verify behaviour.
+    - Invent table descriptions, metric definitions or business rules.
+    - Autofill deliberately blank filters, which are run-time user inputs.

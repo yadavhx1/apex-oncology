@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>apex-oncology | AI / MCP Repository Structure</title>
+<style>
+:root{--bg:#07111f;--panel:#0f1c2e;--panel2:#14253c;--text:#edf4ff;--muted:#9db0c9;--accent:#72a7ff;--green:#4fd39a;--orange:#ffb15c;--line:#2a405e;--code:#08101c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07111f,#0b1829);color:var(--text);font:15px/1.55 Inter,Segoe UI,Arial,sans-serif}.wrap{max-width:1280px;margin:auto;padding:34px 24px 48px}h1{font-size:34px;margin:0 0 8px}.sub{color:var(--muted);margin-bottom:28px}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}.card{background:rgba(15,28,46,.94);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.2)}h2{font-size:19px;margin:0 0 16px}.tree details{margin:5px 0}.tree summary{cursor:pointer;padding:7px 9px;border-radius:8px}.tree summary:hover{background:var(--panel2)}.file{padding:5px 10px 5px 30px}.desc{color:var(--muted);font-size:13px;margin-left:7px}.root{font-family:Consolas,monospace;color:var(--accent);font-weight:700;margin-bottom:8px}code,pre{font-family:Consolas,Monaco,monospace}pre{white-space:pre-wrap;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:16px;overflow:auto}.tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:3px;color:#dbe7f8;font-size:12px}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.step{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font:13px Consolas,monospace}.arrow{color:var(--green)}.highlight{color:var(--green);font-weight:700}.franchise{color:var(--orange);font-weight:700}ul{padding-left:20px}footer{color:var(--muted);margin-top:24px;font-size:13px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>apex-oncology</h1>
+<div class="sub">AI-agent and MCP-ready repository architecture for franchise-specific configuration, scripts, metadata, and context.</div>
+<div class="grid">
+<section class="card"><h2>Repository Structure</h2><div class="tree">
+<div class="root">apex-oncology/</div>
+<details open><summary>🤖 Agent & MCP guidance</summary>
+<div class="file"><code>AGENTS.md</code><span class="desc">Global operating rules, repository conventions, safety and workflow guidance.</span></div>
+<div class="file"><code>CLAUDE.md</code><span class="desc">Claude Code entry-point context.</span></div>
+<div class="file"><code>GEMINI.md</code><span class="desc">Gemini entry-point context.</span></div>
+<div class="file"><code>.github/copilot-instructions.md</code><span class="desc">GitHub Copilot instructions.</span></div>
+<div class="file"><code>.mcp/context.yaml</code><span class="desc">Machine-readable repository map and MCP discovery metadata.</span></div>
+</details>
+<details open><summary>📚 Shared documentation</summary>
+<div class="file"><code>README.md</code><span class="desc">Repository overview and quick-start.</span></div>
+<div class="file"><code>docs/architecture.md</code><span class="desc">Architecture, ownership and dependency model.</span></div>
+<div class="file"><code>docs/agent-workflows.md</code><span class="desc">Recommended agent workflows for discovery and code changes.</span></div>
+<div class="file"><code>docs/mcp-integration.md</code><span class="desc">MCP resources, tools and retrieval strategy.</span></div>
+<div class="file"><code>docs/conventions.md</code><span class="desc">Naming, metadata and authoring conventions.</span></div>
+</details>
+<details open><summary>🏢 franchises/</summary>
+<details open><summary><span class="franchise">Venclexta/</span></summary><div class="file"><code>CONTEXT.md</code><span class="desc">Franchise business and technical context.</span></div><div class="file"><code>manifest.yaml</code><span class="desc">Script inventory and dependencies.</span></div><div class="file"><code>configuration/</code><span class="desc">Configuration files consumed by scripts.</span></div><div class="file"><code>scripts/</code><span class="desc">Python, SQL and notebook workloads.</span></div></details>
+<details open><summary><span class="franchise">Epkinly/</span></summary><div class="file"><code>CONTEXT.md</code><span class="desc">Franchise business and technical context.</span></div><div class="file"><code>manifest.yaml</code><span class="desc">Script inventory and dependencies.</span></div><div class="file"><code>configuration/</code><span class="desc">Configuration files consumed by scripts.</span></div><div class="file"><code>scripts/</code><span class="desc">Python, SQL and notebook workloads.</span></div></details>
+<details open><summary><span class="franchise">Imbruvica/</span></summary><div class="file"><code>CONTEXT.md</code><span class="desc">Franchise business and technical context.</span></div><div class="file"><code>manifest.yaml</code><span class="desc">Script inventory and dependencies.</span></div><div class="file"><code>configuration/</code><span class="desc">Configuration files consumed by scripts.</span></div><div class="file"><code>scripts/</code><span class="desc">Python, SQL and notebook workloads.</span></div></details>
+</details>
+<details><summary>🧩 templates/</summary><div class="file"><code>franchise/CONTEXT.md</code><span class="desc">Template for onboarding another franchise.</span></div><div class="file"><code>franchise/manifest.yaml</code><span class="desc">Template for machine-readable franchise metadata.</span></div><div class="file"><code>script-metadata.yaml</code><span class="desc">Template for script-level dependency metadata.</span></div></details>
+<details><summary>⚙️ GitHub hygiene</summary><div class="file"><code>.github/pull_request_template.md</code><span class="desc">PR checklist including AI-context validation.</span></div><div class="file"><code>.gitignore</code><span class="desc">Ignore generated/local artifacts.</span></div><div class="file"><code>.gitattributes</code><span class="desc">Text and notebook handling rules.</span></div></details>
+</div></section>
+<aside class="card"><h2>Agent Context Flow</h2><div class="flow"><div class="step">AGENTS.md</div><div class="arrow">→</div><div class="step">.mcp/context.yaml</div><div class="arrow">→</div><div class="step">franchises/&lt;F&gt;/CONTEXT.md</div><div class="arrow">→</div><div class="step">manifest.yaml</div><div class="arrow">→</div><div class="step">target script</div><div class="arrow">→</div><div class="step">configuration/*</div></div>
+<h2 style="margin-top:24px">Franchises</h2><span class="tag">Venclexta</span><span class="tag">Epkinly</span><span class="tag">Imbruvica</span>
+<h2 style="margin-top:24px">Supported workloads</h2><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Jupyter Notebook</span><span class="tag">YAML / JSON config</span>
+<h2 style="margin-top:24px">Why this layout works for agents</h2><ul><li>Context is scoped by franchise.</li><li>Manifest metadata makes script-to-config dependencies explicit.</li><li>MCP can expose narrow resources instead of the entire repository.</li><li>Templates keep future franchises consistent.</li></ul>
+<h2 style="margin-top:24px">Suggested MCP resources</h2><ul><li><code>get_repo_context()</code></li><li><code>get_franchise_context(franchise)</code></li><li><code>get_franchise_manifest(franchise)</code></li><li><code>get_script_dependencies(franchise, script)</code></li><li><code>search_context(query, franchise?)</code></li></ul></aside>
+</div>
+<section class="card" style="margin-top:20px"><h2>Example Agent Query</h2><pre>For Venclexta, explain the purpose of &lt;script&gt;, identify all configuration files it consumes, and summarize the business rules that can change its output.</pre><p class="sub" style="margin:12px 0 0">The agent should resolve the request through franchise context → manifest → script → configuration, without loading unrelated franchises.</p></section>
+<footer>Repository: apex-oncology · Franchises: Venclexta, Epkinly, Imbruvica</footer>
+</div></body></html>

@@ -1,0 +1,116 @@
+# TEMPLATE — script-level dependency metadata.
+#
+# Field reference for a single entry in a franchise's manifest.yaml `scripts:` list.
+# This file is documentation, not a config consumed at run time: copy an entry from
+# here into franchises/<Franchise>/manifest.yaml rather than pointing anything at it.
+#
+# Conventions: docs/conventions.md
+# Manifest:    templates/franchise/manifest.yaml
+
+schema_version: 1
+
+# ---------------------------------------------------------------------------
+# Field reference
+# ---------------------------------------------------------------------------
+#
+# name           required   Filename as it appears in scripts/. snake_case.
+# type           required   python | sql | notebook
+# purpose        required   One line: what it produces and why. Business language.
+# owner          required   Person or team accountable for this script.
+# schedule       required   Cadence (monthly, weekly, daily) or `ad-hoc`.
+# configuration  required   Config files consumed, relative to the franchise dir.
+# source_tables  required   Tables, views and files read.
+# outputs        required   Tables, files or reports written.
+# user_inputs    required   Run-time inputs the user must supply.
+# depends_on     required   Other scripts that must run first.
+# notes          optional   What the fields above can't carry.
+#
+# Every required field is expected even when the answer is nothing. Use [] or "none"
+# rather than omitting the key — a reader must be able to tell "this script has no
+# config dependencies" from "nobody recorded its config dependencies".
+
+# ---------------------------------------------------------------------------
+# Annotated example — a fully populated entry
+# ---------------------------------------------------------------------------
+example:
+  # Filename in scripts/. Name it for what it produces, not how.
+  # No _final, _v2, _new, _old, _backup, or dates — Git holds history.
+  name: trx_monthly.sql
+
+  # python | sql | notebook. Must match the file extension.
+  type: sql
+
+  # One line. What it produces and why it exists. Business language, not mechanics.
+  purpose: Monthly TRx by HCP and account for franchise reporting.
+
+  # Person or team accountable — not necessarily the last person to edit it.
+  owner: TODO
+
+  # Cadence, or ad-hoc. If orchestrated, this should match the scheduler.
+  schedule: monthly
+
+  # Config files this script reads, relative to the franchise directory.
+  # List only what it actually consumes — this is what agents use to decide
+  # which files to open, so an over-broad list defeats the purpose.
+  configuration:
+    - configuration/market_filters.yaml
+    - configuration/source_tables.yaml
+
+  # Tables, views and files read. Each should also appear in docs/data-dictionary.md.
+  source_tables:
+    - ALL_CLAIMS_COMBINED_FACT_VW
+    - PRODUCT_XREF
+
+  # Tables, files or reports written. Every FINAL output needs a data dictionary
+  # entry with column definitions. Intermediate/staging tables do not.
+  outputs:
+    - VENCLEXTA_TRX_MONTHLY
+
+  # Run-time inputs the user must supply. These are deliberately blank in the script:
+  # empty IN () lists, blank date bounds, unset market or product filters, macro
+  # variables, empty config keys. Agents surface these and never autofill them, so
+  # an unrecorded user input is a real gap.
+  user_inputs:
+    - reporting_period_end
+    - market_code
+
+  # Other scripts that must run first, by filename. [] if none.
+  depends_on: []
+
+  # Anything the fields above don't carry: business rules applied, known caveats,
+  # indications in scope, dated definitional breaks, reconciliation notes.
+  notes: >-
+    Combination-regimen attribution applies — see CONTEXT.md business rules.
+    Claims restate for two periods, so the latest month is provisional.
+
+# ---------------------------------------------------------------------------
+# Minimal valid entry — a script with no config, no dependencies, no user inputs
+# ---------------------------------------------------------------------------
+minimal_example:
+  name: product_reference_extract.sql
+  type: sql
+  purpose: Product hierarchy reference extract for downstream mapping.
+  owner: TODO
+  schedule: ad-hoc
+  configuration: []
+  source_tables:
+    - PRODUCT_XREF
+  outputs:
+    - VENCLEXTA_PRODUCT_REFERENCE
+  user_inputs: []
+  depends_on: []
+
+# ---------------------------------------------------------------------------
+# Common mistakes
+# ---------------------------------------------------------------------------
+#
+# - Omitting a field instead of using [] — loses the distinction between
+#   "none" and "not recorded".
+# - Listing every config file in the franchise rather than the ones consumed.
+#   Agents open what you list; over-listing wastes context and re-introduces the
+#   whole-repo problem this metadata exists to solve.
+# - Forgetting user_inputs. These are the single most useful field for anyone
+#   about to run the script.
+# - Letting the entry drift from the script. When they disagree the SCRIPT is
+#   authoritative — fix the manifest and report the drift.
+# - Adding a script without an entry at all. Unregistered means invisible.
