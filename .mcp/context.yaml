@@ -104,6 +104,28 @@ skills:
     target: franchises/Venclexta/configuration/aml_dos_grace.yaml
     production_affecting: true
 
+# ---------------------------------------------------------------------------
+# Vendored third-party libraries. Deliberately outside franchises/ — these carry no
+# business rules and every franchise's notebooks load the same artifact.
+# ---------------------------------------------------------------------------
+vendor:
+  path: vendor
+  provenance: vendor/README.md
+  libraries:
+    - name: pldlib
+      artifact: vendor/pldlib.egg
+      version: 0.0.1
+      loader: vendor/spark_pldlib.py
+      description: >-
+        ZS Associates patient-level data library for PySpark. Supplies
+        pldlib.stencil (sob, episode, regimen and other standard PLD metrics),
+        businessLogic and common_utilities.
+      distribution: >-
+        Shipped to executors at run time with addPyFile via
+        spark_pldlib.attach(spark); not installed in the cluster image.
+      used_by:
+        - franchises/Venclexta/scripts/AML_LOT_VAL.ipynb
+
 templates:
   add_franchise: templates/TEMPLATE_FRANCHISE.md
   franchise_context: templates/franchise/CONTEXT.md

@@ -23,6 +23,9 @@ schema_version: 1
 # outputs        required   Tables, files or reports written.
 # user_inputs    required   Run-time inputs the user must supply.
 # depends_on     required   Other scripts that must run first.
+# libraries      optional   Vendored third-party artifacts the script needs at run
+#                           time, as repo-root-relative paths (vendor/*). Omit when
+#                           the script only needs what the cluster image provides.
 # notes          optional   What the fields above can't carry.
 #
 # Every required field is expected even when the answer is nothing. Use [] or "none"
@@ -76,6 +79,11 @@ example:
 
   # Other scripts that must run first, by filename. [] if none.
   depends_on: []
+
+  # Vendored libraries the script needs at run time, from repo root. Omit if none.
+  # These are shared across franchises deliberately — see vendor/README.md.
+  libraries:
+    - vendor/pldlib.egg
 
   # Anything the fields above don't carry: business rules applied, known caveats,
   # indications in scope, dated definitional breaks, reconciliation notes.

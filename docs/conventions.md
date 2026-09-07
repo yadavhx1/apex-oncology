@@ -40,6 +40,10 @@ franchises/<Franchise>/
 - Nothing franchise-specific belongs outside its franchise directory.
 - There is deliberately no shared or `common/` franchise. If two franchises need the
   same value, each holds its own copy; divergence between franchises is expected.
+- The one exception is `vendor/` at the repository root, for pinned third-party
+  libraries a workload needs at run time — see [`vendor/README.md`](../vendor/README.md).
+  These carry no business rules and cannot diverge by franchise, so they are shared
+  rather than duplicated. Our own code never goes there.
 
 ## Configuration rules
 

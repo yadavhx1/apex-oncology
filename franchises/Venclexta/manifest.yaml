@@ -53,12 +53,17 @@ scripts:
       - cws                             # target schema, set in the GLOBAL VARIABLES cell
       - data_period                     # reporting period used when staging the Tx table
     depends_on: []
+    libraries:
+      - vendor/pldlib.egg                 # repo-root path; shared, not franchise-scoped
     notes: >-
       DOS and GRACE were hardcoded in the SQL; they now come from
-      configuration/aml_dos_grace.yaml via scripts/dos_grace_config.py. Requires
-      pldlib.egg and a Spark session. Outputs are stripped in version control —
-      clear them again before committing. Source and output table names still need
-      recording; the notebook builds them from the `cws` schema variable.
+      configuration/aml_dos_grace.yaml via scripts/dos_grace_config.py. Requires a Spark
+      session and pldlib, which is vendored at vendor/pldlib.egg and shipped to the
+      executors by vendor/spark_pldlib.py — the notebook resolves both from the
+      repository root, so it no longer needs a copy of the egg in its launch directory.
+      Outputs are stripped in version control — clear them again before committing.
+      Source and output table names still need recording; the notebook builds them from
+      the `cws` schema variable.
 
   - name: dos_grace_config.py
     type: python

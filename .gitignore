@@ -105,6 +105,10 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Vendored third-party eggs are pinned dependencies, not build output — see
+# vendor/README.md. Everything else matching *.egg stays ignored.
+!vendor/*.egg
+
 # Environments
 .venv/
 venv/

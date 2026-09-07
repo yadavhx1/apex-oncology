@@ -36,6 +36,13 @@
 .gitattributes  text
 .gitkeep        text
 
+# --- Vendored libraries ----------------------------------------------------
+# Zip archives. The default `text=auto` above must not translate line endings in
+# them — that corrupts the archive and the failure only surfaces on an executor.
+*.egg    binary
+*.whl    binary
+*.jar    binary
+
 # --- Notebooks -------------------------------------------------------------
 # Treated as text so changes are reviewable. Outputs must be CLEARED before
 # committing — they routinely contain real data, and a stripped notebook also

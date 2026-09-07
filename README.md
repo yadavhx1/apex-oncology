@@ -44,7 +44,8 @@ apex-oncology/
 │   │   └── scripts/                  .py, .sql, .ipynb workloads
 │   ├── Epkinly/                      same structure
 │   └── Imbruvica/                    same structure
-└── templates/                        scaffolding for new franchises and scripts
+├── templates/                        scaffolding for new franchises and scripts
+└── vendor/                           pinned third-party libraries (pldlib.egg)
 ```
 
 Each franchise is **self-contained** — its own context, inventory, configuration and
