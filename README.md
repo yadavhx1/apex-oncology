@@ -20,7 +20,6 @@ open it in a browser.
 | You are | Read |
 |---|---|
 | An AI agent or MCP client | **[`AGENTS.md`](AGENTS.md)** — the authoritative operating rules |
-| Using Claude Code | [`CLAUDE.md`](CLAUDE.md) |
 | Using Gemini | [`GEMINI.md`](GEMINI.md) |
 | Using Copilot | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) |
 | A human, new to the repo | [`docs/architecture.md`](docs/architecture.md) |
