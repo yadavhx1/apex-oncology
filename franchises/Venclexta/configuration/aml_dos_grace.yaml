@@ -140,7 +140,7 @@ products:
 
   MYLOTARG:
     grace: 7
-    dos_px: 1
+    dos_px: 7
 
   NEXAVAR:
     grace: 18

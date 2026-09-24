@@ -24,4 +24,4 @@ the migration-baseline tests were run.
 
 | Date | Product | Field | Old | New | Reason |
 |---|---|---|---|---|---|
-| — | — | — | — | — | No changes recorded yet. |
+| 2026-09-23 | MYLOTARG | dos_px | 1 | 7 | Not stated |
