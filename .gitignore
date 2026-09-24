@@ -171,7 +171,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # --- Local agent / tool state ----------------------------------------------
-# Shared agent guidance (AGENTS.md, CLAUDE.md, GEMINI.md, .mcp/context.yaml,
+# Shared agent guidance (AGENTS.md, CLAUDE.md, .mcp/context.yaml,
 # .github/copilot-instructions.md) IS tracked. Only per-user local state is not.
 .claude/settings.local.json
 .claude/local/

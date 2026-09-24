@@ -41,7 +41,6 @@ shaped like the first.
 apex-oncology/
 ├── AGENTS.md                       global operating rules — the entry point
 ├── CLAUDE.md                       Claude Code entry-point context
-├── GEMINI.md                       Gemini entry-point context
 ├── README.md                       overview and quick start
 ├── .github/
 │   ├── copilot-instructions.md     Copilot repository instructions
@@ -81,8 +80,8 @@ The architecture diagram shows five layers. Reading top to bottom:
 
 | Layer | Contents | Role |
 |---|---|---|
-| AI agents / MCP clients | Claude, Gemini, Copilot, custom agents, MCP tools | Query the repository for context; propose and make changes |
-| Repository context | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.mcp/context.yaml`, `docs/` | Tell agents how to navigate and what the rules are |
+| AI agents / MCP clients | Claude, Copilot, custom agents, MCP tools | Query the repository for context; propose and make changes |
+| Repository context | `AGENTS.md`, `CLAUDE.md`, `.mcp/context.yaml`, `docs/` | Tell agents how to navigate and what the rules are |
 | Franchise assets | `franchises/<F>/` — context, manifest, configuration, scripts | The franchise-scoped source of truth |
 | Configuration layer | `franchises/<F>/configuration/` | Structured YAML/JSON supplying parameters, paths, secret names, business-rule values |
 | Script execution layer | `franchises/<F>/scripts/` | Python, SQL and notebooks that consume config, process data, emit outputs |
@@ -134,7 +133,7 @@ Rules that keep this tractable:
 
 | Area | Owner |
 |---|---|
-| `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.mcp/`, `.github/` | Repository maintainers |
+| `AGENTS.md`, `CLAUDE.md`, `.mcp/`, `.github/` | Repository maintainers |
 | `docs/` | Repository maintainers, with franchise input |
 | `templates/` | Repository maintainers |
 | `franchises/<F>/**` | That franchise's analytics owner |

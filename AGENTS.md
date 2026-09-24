@@ -3,8 +3,8 @@
 Global operating rules for AI agents and MCP clients working in `apex-oncology`.
 
 This file is the **entry point**. Read it first, then follow the context chain below.
-Every other agent-facing file (`CLAUDE.md`, `GEMINI.md`,
-`.github/copilot-instructions.md`) defers to this one.
+Every other agent-facing file (`CLAUDE.md`, `.github/copilot-instructions.md`) defers to
+this one.
 
 ---
 

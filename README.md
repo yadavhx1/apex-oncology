@@ -31,7 +31,7 @@ places.
 
 ```
 apex-oncology/
-├── AGENTS.md CLAUDE.md    agent entry points
+├── AGENTS.md CLAUDE.md               agent entry points
 ├── .github/                          Copilot instructions, PR template
 ├── .mcp/context.yaml                 machine-readable repo map + MCP discovery
 ├── docs/                             architecture, workflows, conventions, data dictionary

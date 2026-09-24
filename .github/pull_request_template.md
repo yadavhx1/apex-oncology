@@ -78,7 +78,7 @@ told to trust it.
 
 ### Agent guidance changes
 
-Changes to `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` or
+Changes to `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` or
 `.mcp/context.yaml` affect every franchise and every agent.
 
 - [ ] Rule changed in `AGENTS.md` first; client files defer to it rather than restating

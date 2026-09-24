@@ -127,7 +127,6 @@ Whatever client you use, point it at the entry-point file so scoping rules load 
 any franchise content:
 
 - Claude Code reads [`CLAUDE.md`](../CLAUDE.md) automatically.
-- Gemini reads [`GEMINI.md`](../GEMINI.md).
 - Copilot reads [`.github/copilot-instructions.md`](../.github/copilot-instructions.md).
 - Custom agents and MCP tools should call `get_repo_context()` first, which returns
   [`AGENTS.md`](../AGENTS.md).
