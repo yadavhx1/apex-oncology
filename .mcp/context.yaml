@@ -23,7 +23,6 @@ entry_points:
   primary: AGENTS.md
   by_client:
     claude: CLAUDE.md
-    gemini: GEMINI.md
     copilot: .github/copilot-instructions.md
 
 # Ordered resolution path. Follow only as far as the question requires.
