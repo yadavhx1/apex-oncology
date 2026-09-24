@@ -10,8 +10,9 @@ Testing repository for various franchises in oncology.
 
 ![apex-oncology architecture](docs/assets/apex-oncology-architecture.png)
 
-An interactive structure diagram is at [`docs/repo-structure.html`](docs/repo-structure.html) —
-open it in a browser.
+The diagram source is [`docs/assets/apex-oncology-architecture.svg`](docs/assets/apex-oncology-architecture.svg) —
+edit that and re-render the PNG, don't edit the PNG. An interactive structure diagram is at
+[`docs/repo-structure.html`](docs/repo-structure.html) — open it in a browser.
 
 ---
 

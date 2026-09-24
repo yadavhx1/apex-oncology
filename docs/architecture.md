@@ -4,7 +4,9 @@ How `apex-oncology` is organised, who owns what, and how dependencies flow.
 
 ![apex-oncology architecture](assets/apex-oncology-architecture.png)
 
-An interactive version of the structure diagram is at
+The diagram source is [`assets/apex-oncology-architecture.svg`](assets/apex-oncology-architecture.svg);
+the PNG is a render of it for GitHub. Edit the SVG and re-render — the PNG has no
+other master. An interactive version of the structure diagram is at
 [`repo-structure.html`](repo-structure.html) — open it in a browser.
 
 ---
