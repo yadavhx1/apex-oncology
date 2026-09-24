@@ -18,6 +18,33 @@ confirmation → edit the YAML → log it → print what changed.**
 
 ---
 
+## Answer only what was asked
+
+This rule governs every response the skill produces, and it overrides the reporting
+detail described in later steps.
+
+- **A read request gets the values and nothing else.** "Show the DOS list", "what's
+  Mylotarg's grace", "grace list" — answer with the values, in a table, and stop. No
+  rules-that-aren't-per-product section, no exclusions, no RX fallback, no DAC
+  asymmetry, no null-means-oral explanation, unless the user asked for that specific
+  thing.
+- **Do not volunteer context the user did not request.** The YAML's notes and the edge
+  cases at the bottom of this file are background for *your* reasoning. Surface one only
+  when it bears directly on the question asked or on an edit about to be written.
+- **Do not make suggestions unless asked.** No "you may also want to", no proposing the
+  next change, no recommending validation, no observations about unrelated products or
+  fields, no remarks on values that merely look interesting.
+- **Do not repeat what you already said.** Open items the user has already been told
+  about — an uncommitted edit, a stale baseline — get stated once, not re-flagged in
+  every later answer.
+- **Asking is not suggesting.** When a required product or value is missing, ask for it
+  (ground rule 1). That is the one case where you raise something the user didn't say.
+- **Facts that change the meaning of an edit are not suggestions either.** If a value is
+  already what was requested, a product isn't in the file, or a named product is an oral
+  where `dos_px: null` is deliberate, say so — before writing, not as an aside after.
+
+When in doubt, answer the narrow question and stop. The user will ask for more.
+
 ## Ground rules
 
 1. **Ask when the product or the value is missing.** If the user hasn't named the
@@ -45,6 +72,10 @@ confirmation → edit the YAML → log it → print what changed.**
 `Read` the YAML directly — `franchises/Venclexta/configuration/aml_dos_grace.yaml`. It
 holds every product's `grace`, `dos_px` and notes, plus the RX fallback and exclusions.
 Do not shell out to the validator to inspect it.
+
+Reading the whole file is for your own accuracy; it is not licence to report all of it.
+If the request was a read ("show the DOS list"), answer it and stop — see *Answer only
+what was asked*.
 
 Then check the request against what you need:
 
@@ -151,39 +182,45 @@ MYLOTARG
 
 Then confirm both files were written: the YAML and the history file.
 
-## Step 6 — Report and follow up
+## Step 6 — Report
 
-Tell the user:
+Applies **only after an edit was written**. A read request ends at the values.
+
+Keep it to three things:
 
 - **What changed** — the table of product, field, old → new
 - **Blast radius** — `AML_LOT_VAL.ipynb` regenerates `GRACE_VALUE` / `DOS_FINAL` on next
   run, moving treatment episodes and therefore reported lines of therapy for the
   affected products
-- **Not validated** — state plainly that the validator and tests were not run, so the
-  edit is unverified. If the change was structural (a product added or removed, a value
-  moving between groups), say that `MIGRATION_BASELINE_*` in
-  `scripts/test_dos_grace_config.py` is now out of sync and those tests will fail for
-  anyone who runs them.
+- **Not validated** — the validator and tests were not run, so the edit is unverified.
+  If the change was structural (a product added or removed, a value moving between
+  groups), add that `MIGRATION_BASELINE_*` in `scripts/test_dos_grace_config.py` is now
+  out of sync and those tests will fail for anyone who runs them.
 
-Then flag the follow-ups the user owns:
+Those three are consequences of the edit the user just authorised, not suggestions, so
+they are always in scope. State each once and move on.
 
-- [ ] Record the business reason in `franchises/Venclexta/CONTEXT.md` under business
-      rules. A value with no recorded rationale is the thing that causes the next
-      argument about why numbers moved.
-- [ ] Get business-stakeholder sign-off if the change alters a definition rather than
-      correcting an error.
-- [ ] Note the change in the PR, per `.github/pull_request_template.md` — the
-      configuration-change section asks for the blast radius explicitly.
-- [ ] Re-run the notebook. Editing config changes nothing until it runs.
+Then the follow-ups the user owns — the business reason in
+`franchises/Venclexta/CONTEXT.md`, stakeholder sign-off if the change alters a
+definition rather than correcting an error, the blast radius in the PR per
+`.github/pull_request_template.md`, and re-running the notebook. List them plainly as a
+checklist; do not argue for them or expand on why each matters.
+
+Stop there. Do not propose a next change, recommend running the validator, or comment on
+products the edit did not touch.
 
 Do not commit unless the user asks.
 
 ## Notes and edge cases
 
+Background for your own reasoning. Do not recite any of it unasked — raise one only when
+it bears on the question or on an edit about to be written.
+
 - **`L-DAC` is 60 while `S-DAC` and `HI-DAC` are 7.** Carried over from the original
-  SQL and flagged in the YAML. If a user asks to "fix the DAC grace values", confirm
-  which way they want it aligned and whether the business has agreed — don't assume
-  L-DAC is the typo.
+  SQL and flagged in the YAML. Relevant only if the user asks about the DAC products or
+  asks to "fix" them — then confirm which way they want it aligned and whether the
+  business has agreed, rather than assuming L-DAC is the typo. Not something to mention
+  when listing values.
 - **Product name mismatches** are the most common failure. The file uses
   `FINAL_PRODUCT_NAME` values, which are uppercase and sometimes generic
   (`AZACITIDINE`) rather than brand (`VIDAZA`). Check before adding a duplicate under
@@ -191,7 +228,8 @@ Do not commit unless the user asks.
 - **`grace: null` vs absent** — both yield `NULL`. Prefer an explicit `null` entry with
   a note, so the product is visibly accounted for.
 - **`dos_px: null` is normal**, not an omission: 11 of the 28 products are orals with
-  no PX claims.
+  no PX claims. Say this when the user is about to set one of them, not as a footnote to
+  a list.
 - **Do not run the notebook against production** to preview a change.
 
 ## Files
