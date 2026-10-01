@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venclexta AML — Onboarding Guide</title>
+<style>
+:root{
+  --font-sans:'Inter','Aptos','Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  --font-mono:'JetBrains Mono','Cascadia Code',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  --ink:#2B2100; --paper:#FBF9F4; --panel:#FFFFFF; --muted:#6B5A22; --faint:#A89968;
+  --hair:#E7E2D3; --hair-strong:#D8CFB5;
+  --cdl:#8A6800; --cdl-ink:#6B5000; --cdl-soft:#FFF6DF; --cdl-line:#F0DCA0;
+  --snow:#9C7A2E; --snow-ink:#7A5E1F; --snow-bright:#C79A3D; --snow-soft:#F7F0DF;
+  --amber:#A2711C; --amber-soft:#FBF4E6; --amber-line:#E9DCBC;
+  --green:#3D7C4E; --green-soft:#EDF5EF; --green-line:#BFE3CE;
+  --red:#A5453A; --red-soft:#FAEEEC; --red-line:#E6C9C4;
+  --sidebar:#F2EFE4; --sb-ink:#5C4A1F; --sb-faint:#A08F5E; --sb-hair:#E3DCC7; --sb-active:#FFFFFF;
+  --shadow:0 1px 2px rgba(43,33,0,.04), 0 6px 14px -4px rgba(43,33,0,.07);
+  --sbw:212px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans),system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:var(--font-sans),sans-serif;font-weight:600;line-height:1.25;margin:0;}
+.mono{font-family:var(--font-mono),monospace;}
+a{color:var(--cdl);text-decoration:none;}
+a:hover{text-decoration:underline;}
+p{margin:10px 0 0;}
+
+/* ---------- sidebar ---------- */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sbw);background:var(--sidebar);color:var(--sb-ink);display:flex;flex-direction:column;z-index:60;border-right:1px solid var(--sb-hair);}
+.sb-head{padding:16px 14px 13px;border-bottom:1px solid var(--sb-hair);}
+.sb-logo{height:20px;width:auto;display:block;margin-bottom:9px;}
+.sb-brand{display:flex;align-items:center;gap:8px;font-weight:650;font-size:12.5px;color:var(--ink);letter-spacing:-.01em;line-height:1.3;}
+.sb-brand .dot{width:9px;height:9px;border-radius:2.5px;background:linear-gradient(135deg,var(--cdl) 0 50%,var(--snow-bright) 50% 100%);flex:none;}
+.sb-sub{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sb-faint);margin-top:7px;}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 8px 16px;}
+.sb-nav::-webkit-scrollbar{width:6px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:8px;}
+.sb-glabel{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sb-faint);padding:14px 10px 5px;}
+.sb-glabel:first-child{padding-top:2px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6.5px 10px;margin:1px 0;border-radius:7px;font-size:12.6px;color:var(--sb-ink);cursor:pointer;}
+.sb-item:hover{background:rgba(255,255,255,.6);}
+.sb-item.active{background:var(--sb-active);color:var(--cdl-ink);font-weight:600;box-shadow:var(--shadow);}
+.sb-item .n{width:5px;height:5px;border-radius:50%;background:var(--hair-strong);flex:none;}
+.sb-item.active .n{background:var(--cdl);}
+.sb-item.tone-amber .n{background:var(--amber);}
+.sb-foot{padding:11px 14px 13px;border-top:1px solid var(--sb-hair);font-size:10.5px;color:var(--sb-faint);display:flex;align-items:center;gap:7px;}
+.sw{width:9px;height:9px;border-radius:2.5px;background:var(--amber-soft);border:1px dashed var(--amber-line);flex:none;}
+
+/* ---------- main / topbar ---------- */
+.main{margin-left:var(--sbw);min-height:100vh;}
+.topbar{position:sticky;top:0;background:rgba(246,248,250,.9);backdrop-filter:blur(6px);border-bottom:1px solid var(--hair);padding:13px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50;}
+.crumb{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);letter-spacing:.01em;}
+.crumb b{color:var(--ink);}
+.tb-search{position:relative;display:flex;align-items:center;}
+.tb-search svg{position:absolute;left:10px;width:14px;height:14px;color:var(--faint);pointer-events:none;}
+.tb-search input{width:230px;padding:7px 12px 7px 32px;border:1px solid var(--hair);border-radius:999px;background:var(--paper);font-family:var(--font-sans);font-size:12.5px;color:var(--ink);}
+.tb-search input:focus{outline:2px solid var(--cdl);outline-offset:1px;border-color:var(--cdl);}
+.tb-search input::placeholder{color:var(--faint);}
+.search-results{position:absolute;top:calc(100% + 8px);right:0;width:340px;max-height:380px;overflow-y:auto;background:#fff;border:1px solid var(--hair);border-radius:12px;box-shadow:0 12px 32px rgba(33,43,54,.14);z-index:90;display:none;}
+.search-results.open{display:block;}
+.sr-item{display:flex;gap:11px;align-items:flex-start;padding:11px 15px;cursor:pointer;border-bottom:1px solid var(--hair);}
+.sr-item:last-child{border-bottom:none;}
+.sr-item:hover, .sr-item.active{background:var(--paper);}
+.sr-tag{flex:none;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.04em;background:var(--cdl-soft);color:var(--cdl-ink);border-radius:5px;padding:3px 6px;margin-top:1px;}
+.sr-tag.kpi{background:var(--green-soft);color:var(--green);}
+.sr-body{min-width:0;}
+.sr-body b{display:block;font-size:12.8px;color:var(--ink);margin-bottom:2px;}
+.sr-body p{font-size:11.8px;color:var(--muted);margin:0;line-height:1.4;}
+.sr-empty{padding:18px 16px;text-align:center;font-size:12px;color:var(--muted);}
+@keyframes termFlash{0%{box-shadow:0 0 0 3px var(--cdl-line);}100%{box-shadow:0 0 0 3px transparent;}}
+.term-card.flash{animation:termFlash 1.1s ease-out;}
+.no-match{padding:20px;text-align:center;color:var(--faint);font-size:13px;font-style:italic;width:100%;}
+
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.chip{font-family:var(--font-mono);font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--hair);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.chip:hover{border-color:var(--hair-strong);}
+.chip.active{background:var(--cdl);color:#fff;border-color:var(--cdl);}
+
+.walk-steps{list-style:none;margin:12px 0 0;padding:0;counter-reset:walkstep;}
+.walk-steps li{position:relative;padding:9px 0 9px 34px;border-top:1px solid var(--hair);}
+.walk-steps li:first-child{border-top:none;}
+.walk-steps li::before{counter-increment:walkstep;content:counter(walkstep);position:absolute;left:0;top:9px;width:22px;height:22px;border-radius:50%;background:var(--cdl-soft);color:var(--cdl-ink);font-family:var(--font-mono);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.walk-steps .gap-num{font-family:var(--font-mono);color:var(--cdl-ink);font-weight:600;}
+.walk-steps li.is-b::before{background:var(--amber-soft);color:var(--amber);}
+
+.tile-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;}
+.tile-num{width:32px;height:32px;border-radius:50%;background:var(--cdl);color:#fff;font-family:var(--font-mono);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;}
+.tile-head h4{font-size:15px;margin-bottom:3px;}
+.tile-head p{font-size:12.8px;color:var(--muted);line-height:1.5;margin:0;}
+
+.ann-row{position:relative;height:24px;margin:14px 0 2px 108px;}
+.ann-chip{position:absolute;top:0;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:5px;white-space:nowrap;}
+.ann-chip.ok{background:var(--green-soft);color:var(--green);}
+.ann-chip.over{background:var(--amber-soft);color:var(--amber);}
+
+.seg-captions{display:flex;align-items:flex-start;margin:6px 0 0;}
+.seg-cap{font-size:11px;color:var(--muted);line-height:1.4;padding:0 6px;box-sizing:border-box;}
+.seg-cap b{color:var(--ink);}
+
+/* ---------- hero ---------- */
+.hero{background:#6E5810;background:linear-gradient(135deg, var(--cdl-ink) 0%, var(--snow-ink) 100%);border-radius:16px;padding:38px 42px;color:#fff;}
+.doc-header{padding-bottom:22px;border-bottom:1px solid var(--hair-strong);}
+.doc-title{font-size:30px;font-weight:700;letter-spacing:-.01em;margin-top:10px;color:var(--ink);line-height:1.22;}
+.doc-lede{font-size:15px;color:var(--muted);margin-top:13px;max-width:640px;line-height:1.62;}
+
+.toc-box{margin-top:18px;padding:15px 20px;border:1px solid var(--hair-strong);border-radius:3px;}
+.toc-label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:11px;}
+.toc-list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;row-gap:8px;}
+.toc-list li{font-size:13px;padding:0 16px;}
+.toc-list li:first-child{padding-left:0;}
+.toc-list li:not(:first-child){border-left:1px solid var(--hair-strong);}
+.toc-num{color:var(--faint);font-family:var(--font-mono);font-size:11.5px;margin-right:6px;}
+.toc-list a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px;}
+.toc-list a:hover{border-bottom-color:var(--cdl);}
+
+.wrap{max-width:900px;margin:0 auto;padding:34px 32px 90px;}
+section{padding-top:30px;scroll-margin-top:66px;}
+section:first-of-type{padding-top:4px;}
+
+.eyebrow{font-family:var(--font-mono);font-size:10.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px;}
+h2.title{font-size:23px;letter-spacing:-.015em;margin-bottom:6px;}
+h3{font-size:15px;margin:26px 0 2px;}
+.lede{color:var(--muted);font-size:14px;max-width:640px;}
+
+.card{background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);margin-top:16px;}
+.grid3{display:flex;gap:14px;margin-top:18px;}
+.fr-card{flex:1;min-width:0;border-radius:12px;border:1px solid var(--hair);padding:16px 17px;background:var(--panel);}
+.fr-card h4{font-size:14px;margin:9px 0 3px;}
+.fr-card p{font-size:12.5px;color:var(--muted);margin:0;line-height:1.55;}
+.fr-card.tone-amber{background:var(--amber-soft);border-color:var(--amber-line);}
+.fr-card.tone-green{background:var(--green-soft);border-color:var(--green-line);}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+.dtbl thead th{text-align:left;background:var(--paper);color:var(--muted);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:9px 12px;border-bottom:1px solid var(--hair);position:sticky;top:0;}
+.dtbl td{padding:8px 12px;border-top:1px solid var(--hair);vertical-align:top;}
+.dtbl tbody tr:hover td{background:var(--paper);}
+.dtbl .num{font-family:var(--font-mono);font-size:12.5px;}
+.dtbl .prod{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--cdl-ink);}
+.tbl-scroll{max-height:430px;overflow-y:auto;border:1px solid var(--hair);border-radius:12px;margin-top:14px;}
+.tbl-scroll .dtbl{margin:0;}
+.tbl-flat{border:1px solid var(--hair);border-radius:12px;overflow:hidden;margin-top:14px;}
+.tbl-flat .dtbl{margin:0;}
+.empty-row{color:var(--faint);font-style:italic;text-align:center;padding:16px !important;}
+
+.tag{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;display:inline-block;white-space:nowrap;}
+.tag-cdl{background:var(--cdl-soft);color:var(--cdl-ink);}
+.tag-amber{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber-line);}
+.tag-green{background:var(--green-soft);color:var(--green);}
+.tag-red{background:var(--red-soft);color:var(--red);border:1px solid var(--red-line);}
+.tag-muted{background:var(--hair);color:var(--muted);}
+
+.callout{display:flex;gap:11px;background:var(--amber-soft);border:1px solid var(--amber-line);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13px;color:#7A4A0A;line-height:1.55;}
+.dl-card{display:flex;align-items:center;gap:14px;border:1px solid var(--hair);border-radius:12px;padding:15px 18px;margin-top:14px;background:var(--panel);}
+.dl-card svg{width:26px;height:26px;color:var(--cdl);flex:none;}
+.dl-card .dl-body{flex:1;}
+.dl-card .dl-body b{font-size:13.5px;display:block;margin-bottom:2px;color:var(--ink);}
+.dl-card .dl-body p{font-size:12.3px;color:var(--muted);margin:0;}
+.dl-btn{flex:none;background:var(--cdl);color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;}
+.dl-btn:hover{background:var(--cdl-ink);text-decoration:none;color:#fff;}
+.callout.ok{background:var(--green-soft);border-color:var(--green-line);color:#1F5A34;}
+.callout.info{background:var(--cdl-soft);border-color:var(--cdl-line);color:var(--cdl-ink);}
+.callout b{display:block;margin-bottom:2px;}
+.callout svg{flex:none;width:16px;height:16px;margin-top:2px;}
+
+.kv{margin:14px 0 0;font-size:13.5px;}
+.kv div{display:flex;gap:14px;padding:5px 0;border-top:1px solid var(--hair);}
+.kv div:first-child{border-top:none;}
+.kv dt{color:var(--muted);margin:0;width:150px;flex:none;}
+.kv dd{margin:0;}
+
+.filelist{list-style:none;margin:14px 0 0;padding:0;}
+.filelist li{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid var(--hair);font-size:13px;align-items:baseline;}
+.filelist li:first-child{border-top:none;}
+.filelist code{font-family:var(--font-mono);font-size:11.8px;color:var(--cdl-ink);word-break:break-all;}
+.filelist span{color:var(--muted);font-size:12.3px;text-align:right;flex:none;max-width:46%;}
+
+.pagefoot{margin-top:56px;padding-top:18px;border-top:1px solid var(--hair);font-size:11.5px;color:var(--faint);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.pagefoot b{color:var(--muted);}
+
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:8px;}
+
+/* ---------- glossary ---------- */
+.term-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+.term-card{flex:1 1 260px;border:1px solid var(--hair);border-radius:14px;padding:22px 20px;background:var(--panel);transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;}
+.term-card:hover{border-color:var(--cdl-line);box-shadow:var(--shadow);transform:translateY(-1px);}
+.term-card .tc-icon{font-size:28px;line-height:1;display:block;margin-bottom:12px;}
+.term-card h4{font-size:14.5px;}
+.term-card p{font-size:12.6px;color:var(--muted);margin-top:6px;line-height:1.55;}
+.term-card .tc-val{font-family:var(--font-mono);font-size:11px;color:var(--cdl-ink);background:var(--cdl-soft);border-radius:5px;padding:2px 6px;display:inline-block;margin-top:9px;}
+.term-card .tc-example{display:block;font-size:12px;color:var(--muted);background:var(--paper);border-left:3px solid var(--cdl-line);padding:8px 10px;margin-top:10px;border-radius:0 6px 6px 0;line-height:1.55;}
+.term-card .tc-example b{color:var(--ink);font-weight:600;}
+
+/* ---------- cascade ---------- */
+.cascade{display:flex;align-items:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
+.cas-box{flex:1 1 130px;border:1px solid var(--hair);border-radius:10px;padding:12px 10px;text-align:center;background:var(--panel);}
+.cas-box .cb-eyebrow{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.cas-box .cb-title{font-size:13px;font-weight:600;margin-top:3px;}
+.cas-arrow{flex:none;color:var(--faint);font-size:15px;}
+@media (max-width:780px){.cascade{flex-direction:column;}.cas-arrow{transform:rotate(90deg);}}
+
+/* ---------- playground ---------- */
+.play-shell{border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:20px 22px;margin-top:18px;}
+.ctrl-grid{display:flex;gap:24px;flex-wrap:wrap;}
+.ctrl{flex:1 1 220px;}
+.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.ctrl label{font-size:12.5px;color:var(--muted);}
+.ctrl .ctrl-val{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--cdl-ink);}
+.ctrl .ctrl-default{font-family:var(--font-mono);font-size:10.5px;color:var(--faint);}
+input[type=range]{width:100%;accent-color:var(--cdl);height:4px;}
+.reset-btn{font-family:var(--font-mono);font-size:11px;color:var(--muted);background:var(--paper);border:1px solid var(--hair);border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap;}
+.reset-btn:hover{border-color:var(--hair-strong);}
+
+.timeline{margin-top:24px;}
+.tl-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.tl-label{width:96px;flex:none;font-size:11.5px;color:var(--muted);text-align:right;}
+.tl-track{position:relative;flex:1;height:30px;background:var(--paper);border-radius:7px;border:1px solid var(--hair);}
+.tl-track.fills-track{height:20px;background:transparent;border:none;}
+.tl-dot{position:absolute;top:50%;width:7px;height:7px;border-radius:50%;background:var(--sb-ink);transform:translate(-50%,-50%);}
+.tl-seg{position:absolute;top:3px;bottom:3px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;transition:left .25s ease, width .25s ease;}
+.tl-seg.seg-cdl{background:var(--cdl);}
+.tl-seg.seg-snow{background:var(--snow);}
+.tl-seg.seg-amber{background:var(--amber);}
+.tl-seg.seg-green{background:var(--green);}
+
+.brand-legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 2px 108px;}
+.brand-legend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);}
+.brand-legend i{width:9px;height:9px;border-radius:2.5px;display:inline-block;}
+
+.cascade-wrap{position:relative;}
+.sticky-toolbar{position:sticky;top:64px;z-index:45;display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:rgba(246,248,250,.95);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:12px;padding:11px 16px;margin-bottom:16px;box-shadow:var(--shadow);}
+.stb-ctrl{display:flex;align-items:center;gap:8px;}
+.stb-ctrl label{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.stb-ctrl input[type=range]{width:100px;accent-color:var(--cdl);}
+.stb-val{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--cdl-ink);min-width:28px;}
+.stb-summary{font-size:12px;color:var(--muted);flex:1 1 220px;}
+.stb-summary b{color:var(--ink);}
+.tl-axis{position:relative;height:16px;margin-left:108px;}
+.tl-axis span{position:absolute;top:0;font-family:var(--font-mono);font-size:9.5px;color:var(--faint);transform:translateX(-50%);}
+.tl-gapnote{position:absolute;top:-17px;font-family:var(--font-mono);font-size:9.5px;color:var(--amber);white-space:nowrap;transform:translateX(-50%);}
+
+.readout{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.ro-card{flex:1 1 150px;border-radius:10px;padding:11px 13px;background:var(--paper);border:1px solid var(--hair);}
+.ro-card .ro-num{font-family:var(--font-mono);font-size:19px;font-weight:600;color:var(--cdl-ink);}
+.ro-card .ro-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.readout-line{font-size:13px;color:var(--muted);margin-top:12px;}
+.readout-line b{font-family:var(--font-mono);color:var(--cdl-ink);font-weight:700;}
+.nps-box{margin-top:14px;border-radius:10px;padding:13px 15px;background:var(--green-soft);border:1px solid var(--green-line);font-size:13px;color:#1F5A34;}
+.next-card{background:var(--cdl-soft);border:1px solid var(--cdl-line);border-radius:14px;padding:28px 30px;margin-top:18px;}
+.next-card h3{font-size:17px;color:var(--cdl-ink);margin-bottom:9px;}
+.next-card p{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:680px;}
+.next-card .np-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--cdl);margin-top:18px;margin-bottom:9px;display:block;}
+.next-card ul{margin:0;padding:0;list-style:none;}
+.next-card li{font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--cdl-line);border-radius:8px;padding:9px 14px;margin-bottom:8px;font-style:italic;max-width:620px;}
+.nps-box b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-mono);margin-bottom:3px;color:var(--green);}
+
+.toggle-row{display:flex;align-items:center;gap:10px;margin-top:16px;}
+.toggle{position:relative;width:38px;height:21px;border-radius:999px;background:var(--hair-strong);cursor:pointer;flex:none;}
+.toggle .knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .18s ease;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+.toggle.on{background:var(--amber);}
+.toggle.on .knob{left:19px;}
+.toggle-row span{font-size:12.5px;color:var(--muted);}
+
+.term-chip{font-family:var(--font-mono);font-size:11.5px;background:var(--cdl-soft);color:var(--cdl-ink);border-radius:4px;padding:1px 5px;}
+
+@media (max-width:780px){
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+  .grid3{flex-direction:column;}
+  .topbar{padding:12px 18px;}
+  .wrap{padding:26px 18px 70px;}
+  .tl-label{width:64px;font-size:10px;}
+  .tl-axis{margin-left:76px;}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-head">
+    <img class="sb-logo" src="data:image/png;base64,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" alt="AbbVie">
+    <div class="sb-brand"><span class="dot"></span>Oncology<br>AML Onboarding</div>
+    <div class="sb-sub">Venclexta- AML</div>
+  </div>
+  <nav class="sb-nav" id="sbNav">
+    <div class="sb-item" data-target="overview"><span class="n"></span>Overview</div>
+    <div class="sb-glabel">Onboarding</div>
+    <div class="sb-item" data-target="glossary"><span class="n"></span>Key terms</div>
+    <div class="sb-item" data-target="cascade"><span class="n"></span>How it connects</div>
+    <div class="sb-glabel">Venclexta</div>
+    <div class="sb-item" data-target="hierarchy"><span class="n"></span>Backbone hierarchy</div>
+    <div class="sb-item" data-target="vx-product"><span class="n"></span>Product &amp; rules</div>
+    <div class="sb-item" data-target="vx-values"><span class="n"></span>Grace &amp; DOS values</div>
+    <div class="sb-glabel">Interactive</div>
+    <div class="sb-item" data-target="playground"><span class="n"></span>Try it yourself</div>
+    <div class="sb-item" data-target="next-steps"><span class="n"></span>What's next</div>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">Venclexta <b>AML Analytics Handbook</b></div>
+    <div class="tb-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="glossarySearch" placeholder="Search key terms…" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <section id="overview">
+      <div class="doc-header">
+        <span class="eyebrow">VENCLEXTA · AML ANALYTICS HANDBOOK</span>
+        <h1 class="doc-title">AML analytics.</h1>
+        <p class="doc-lede">Your plain-language guide to how Venclexta's AML analytics actually work — learn the key terms, watch a change ripple through the chain, then play with it yourself.</p>
+      </div>
+
+      <div class="toc-box">
+        <span class="toc-label">Contents</span>
+        <ol class="toc-list">
+          <li><span class="toc-num">1.</span><a href="#glossary">Key terms</a></li>
+          <li><span class="toc-num">2.</span><a href="#cascade">How it connects</a></li>
+          <li><span class="toc-num">3.</span><a href="#hierarchy">Backbone hierarchy</a></li>
+          <li><span class="toc-num">4.</span><a href="#vx-values">Real values</a></li>
+          <li><span class="toc-num">5.</span><a href="#playground">Try it yourself</a></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <span class="eyebrow">ONBOARDING · KEY TERMS</span>
+      <h2 class="title">Key terms</h2>
+      <p class="lede">Everything on this page is built from these five ideas — this is what each one means and why it exists.</p>
+      <div class="term-grid">
+        <div class="term-card" data-term="dos">
+          <span class="tc-icon">💊</span>
+          <h4>DOS — Days of Supply</h4>
+          <p>How many days a single fill is assumed to cover. A 28-day fill "runs out" 28 days after it's picked up.</p>
+          <span class="tc-example"><b>e.g.</b> A Venclexta fill on Jan 5 with a 28-day supply covers the patient through Feb 2.</span>
+          <span class="tc-example"><b>Note:</b> a missing or zero days-supply falls back to 28 days. Medical-benefit (PX) claims use a per-product value instead, and orals correctly get NULL there, not a default.</span>
+        </div>
+        <div class="term-card" data-term="grace">
+          <span class="tc-icon">⏳</span>
+          <h4>Grace period</h4>
+          <p>Extra days beyond DOS you're still willing to call "still on treatment," before deciding someone stopped. Longer grace tolerates later refills.</p>
+          <span class="tc-example"><b>e.g.</b> Their next fill doesn't happen until Feb 20 — 18 days late. Well inside a 60-day grace, so it's still the same episode.</span>
+          <span class="tc-example"><b>Note:</b> a product nobody has reviewed yet gets NULL for both DOS and grace — never a default — so it can't silently create or extend a line of therapy.</span>
+        </div>
+        <div class="term-card" data-term="episode">
+          <span class="tc-icon">🔗</span>
+          <h4>Episode</h4>
+          <p>A run of fills for the <em>same drug</em>, glued together as long as the gap between one Rx's start date and the next stays inside DOS combined with Grace. A bigger gap starts a new episode.</p>
+          <span class="tc-example"><b>e.g.</b> Steady refills every 28 days all join into one episode. A 90+ day gap between Rx start dates blows past DOS combined with Grace (88 days) — the next fill starts a new episode instead.</span>
+        </div>
+        <div class="term-card" data-term="regimen">
+          <span class="tc-icon">🧩</span>
+          <h4>Regimen</h4>
+          <p>Whichever drug(s) are active at the same time. Changes the moment a drug starts or stops overlapping another. With more than one drug active, the highest-priority one — the <b>backbone</b> — decides how the regimen is classified.</p>
+          <span class="tc-example"><b>e.g.</b> Venclexta alone is one regimen. The moment Azacitidine is added alongside it, the regimen becomes "Venclexta + Azacitidine" — and since Venclexta outranks Azacitidine on the priority list, Venclexta is the backbone.</span>
+        </div>
+        <div class="term-card" data-term="lot">
+          <span class="tc-icon">🧵</span>
+          <h4>Line of therapy (LOT)</h4>
+          <p>A run of regimens that counts as one continuous course of treatment. Starts a new line on a 90+ day gap, or a backbone change — unless it's specifically exempted, like switching between Venclexta and an HMA.</p>
+          <span class="tc-example"><b>e.g.</b> That same patient stops treatment, then restarts Venclexta 120 days later. Past the 90-day threshold — that restart is Line 2, not a continuation of Line 1.</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top:30px;">KPIs</h3>
+      <p class="lede">Reported metrics built from the terms above.</p>
+      <div class="term-grid">
+        <div class="term-card" data-term="nps">
+          <span class="tc-icon">📊</span>
+          <h4>NPS — New Patient Starts</h4>
+          <p>How many patients begin their very first line, by regimen, by month. Counted <em>once per patient, ever</em> — at their first line's start, not at every later switch.</p>
+          <span class="tc-example"><b>e.g.</b> If that patient's very first-ever fill was in January, they count toward January's Venclexta NPS — once, for good, no matter how many lines follow.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="cascade">
+      <span class="eyebrow">ONBOARDING · CONTEXTUAL KNOWLEDGE</span>
+      <h2 class="title">How they connect</h2>
+      <p class="lede">Two inputs, a chain of derived layers, one reported number. Change the inputs and the effect travels down the whole chain.</p>
+      <div class="cascade">
+        <div class="cas-box"><span class="cb-eyebrow">Inputs</span><div class="cb-title">DOS combined with Grace</div></div>
+        <span class="cas-arrow">→</span>
+        <div class="cas-box"><span class="cb-eyebrow">Step 1</span><div class="cb-title">Episodes</div></div>
+        <span class="cas-arrow">→</span>
+        <div class="cas-box"><span class="cb-eyebrow">Step 2</span><div class="cb-title">Regimens</div></div>
+        <span class="cas-arrow">→</span>
+        <div class="cas-box"><span class="cb-eyebrow">Step 3</span><div class="cb-title">Line of therapy</div></div>
+        <span class="cas-arrow">→</span>
+        <div class="cas-box"><span class="cb-eyebrow">Reported KPI</span><div class="cb-title">e.g., NPS</div></div>
+      </div>
+    </section>
+
+
+    <section id="hierarchy">
+      <span class="eyebrow">REFERENCE · BACKBONE PRIORITY</span>
+      <h2 class="title">Which drug wins? The backbone hierarchy</h2>
+      <p class="lede">When a regimen has more than one drug active, the <b>backbone</b> is whichever one ranks highest on a fixed priority list — and AML uses two different lists, depending on the patient.</p>
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+        <div><b>Which list applies?</b>If a patient has ever received an Intensive Chemo product, they're <b>IC-eligible</b> for their whole journey and use the 26-product list. Otherwise they're <b>IC-ineligible</b> and use the shorter 13-product list — this is decided once per patient, not per regimen.</div>
+      </div>
+
+      <h3>IC-ineligible hierarchy (13 products)</h3>
+      <div class="dl-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <div class="dl-body"><b>Full ranked list, 13 products</b></div>
+        <a class="dl-btn" href="data:text/csv;base64,UmFuayxQcm9kdWN0LENsYXNzCjEsVkVOQ0xFWFRBLFRhcmdldGVkCjIsVElCU09WTyxUYXJnZXRlZAozLFJFWkxJREhJQSxUYXJnZXRlZAo0LElESElGQSxUYXJnZXRlZAo1LFhPU1BBVEEsVGFyZ2V0ZWQKNixEQVVSSVNNTyxUYXJnZXRlZAo3LFJZREFQVCxUYXJnZXRlZAo4LE1ZTE9UQVJHLFRhcmdldGVkCjksTC1EQUMsTG93IEludGVuc2l2ZSBDaGVtbwoxMCxBWkFDSVRJRElORSxITUEKMTEsREVDSVRBQklORSxITUEKMTIsSU5RT1ZJLEhNQQoxMyxPTlVSRUcsSE1B" download="ic-ineligible-hierarchy.csv">Download CSV</a>
+      </div>
+
+      <h3>IC-eligible hierarchy (26 products)</h3>
+      <div class="dl-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <div class="dl-body"><b>Full ranked list, 26 products</b></div>
+        <a class="dl-btn" href="data:text/csv;base64,UmFuayxQcm9kdWN0LENsYXNzCjEsUy1EQUMgLyBISS1EQUMsSW50ZW5zaXZlIENoZW1vCjIsVkFORkxZVEEsSW50ZW5zaXZlIENoZW1vCjMsVllYRU9TLEludGVuc2l2ZSBDaGVtbwo0LENZQ0xPUEhPU1BIQU1JREUsSW50ZW5zaXZlIENoZW1vCjUsVklOQ1JJU1RJTkUsSW50ZW5zaXZlIENoZW1vCjYsRkxVREFSQUJJTkUsSW50ZW5zaXZlIENoZW1vCjcsSURBUlVCSUNJTixJbnRlbnNpdmUgQ2hlbW8KOCxEQVVOT1JVQklDSU4sSW50ZW5zaXZlIENoZW1vCjksTUlUT1hBTlRST05FLEludGVuc2l2ZSBDaGVtbwoxMCxSWURBUFQsVGFyZ2V0ZWQKMTEsVkVOQ0xFWFRBLFRhcmdldGVkCjEyLFhPU1BBVEEsVGFyZ2V0ZWQKMTMsVElCU09WTyxUYXJnZXRlZAoxNCxSRVpMSURISUEsVGFyZ2V0ZWQKMTUsSURISUZBLFRhcmdldGVkCjE2LE1ZTE9UQVJHLFRhcmdldGVkCjE3LERBVVJJU01PLFRhcmdldGVkCjE4LE9OVVJFRyxITUEKMTksSU5RT1ZJLEhNQQoyMCxORVhBVkFSLFRhcmdldGVkCjIxLEVUT1BPU0lERSxJbnRlbnNpdmUgQ2hlbW8KMjIsQ0xBRFJJQklORSxMb3cgSW50ZW5zaXZlIENoZW1vCjIzLENMT0ZBUkFCSU5FLExvdyBJbnRlbnNpdmUgQ2hlbW8KMjQsQVpBQ0lUSURJTkUsSE1BCjI1LERFQ0lUQUJJTkUsSE1BCjI2LEwtREFDLExvdyBJbnRlbnNpdmUgQ2hlbW8=" download="ic-eligible-hierarchy.csv">Download CSV</a>
+      </div>
+    </section>
+
+    <section id="vx-product">
+      <span class="eyebrow">VENCLEXTA</span>
+      <h2 class="title">Product &amp; business rules</h2>
+      <dl class="kv">
+        <div><dt>Brand</dt><dd>Venclexta</dd></div>
+        <div><dt>Generic name</dt><dd class="mono">venetoclax</dd></div>
+        <div><dt>Mechanism</dt><dd>BCL-2 inhibitor</dd></div>
+        <div><dt>Indications</dt><dd>Chronic lymphocytic leukaemia (CLL); acute myeloid leukaemia (AML)</dd></div>
+      </dl>
+      <p class="lede">Commonly used in combination regimens — attribution between combination partners is a recurring source of definitional difficulty, and the franchise's convention for it is still <span class="tag tag-amber">TODO</span>. The governing rules for Grace, DOS, and safety defaults are covered in <a href="#glossary">Key terms</a>, rather than repeated here.</p>
+    </section>
+
+    <section id="vx-values">
+      <span class="eyebrow">VENCLEXTA · CONFIGURATION</span>
+      <h2 class="title">Grace &amp; days-of-supply values</h2>
+      <p class="lede">28 products. 17 carry a medical-benefit (PX) days-of-supply value; the other 11 are orals dispensed through pharmacy only, where PX is correctly <span class="mono">null</span> rather than missing.</p>
+
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+        <div><b>RX fallback — 28 days</b>Applies to every RX claim whose own days-supply is missing or non-positive. Blunt instrument, applies file-wide, not per product.</div>
+      </div>
+
+      <div class="dl-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <div class="dl-body"><b>Full values list, 28 products</b><p>Grace, DOS, and notes for every product — CSV, ready to open in a spreadsheet.</p></div>
+        <a class="dl-btn" href="data:text/csv;base64,UHJvZHVjdCxHcmFjZSAoZCksRE9TIC0gUFggKGQpLE5vdGUKQVJTRU5JQ19UUklPWElERSw2MCwyOCwyOC1kYXkgY3ljbGUKQVpBQ0lUSURJTkUsNjAsMjgsMjgtZGF5IGN5Y2xlCkNMQURSSUJJTkUsNywxLApDTE9GQVJBQklORSw1LDEsCkNZQ0xPUEhPU1BIQU1JREUsNSwxLApEQVVOT1JVQklDSU4sNSwxLApEQVVSSVNNTyw2MCwsT3JhbCAtIFJYIG9ubHkKREVDSVRBQklORSw2MCwyOCwyOC1kYXkgY3ljbGUKRVRPUE9TSURFLDUsMSwKRkxVREFSQUJJTkUsNSwxLApISS1EQUMsNywxLEhpZ2gtZG9zZSBjeXRhcmFiaW5lIC0gZmxhZ2dlZCAoZ3JhY2UgYXN5bW1ldHJ5KQpJREFSVUJJQ0lOLDUsMSwKSURISUZBLDYwLCxPcmFsIC0gUlggb25seQpJTlFPVkksMjgsLE9yYWwgLSBSWCBvbmx5OyBJQy1pbmVsaWdpYmxlIChITUEpCkwtREFDLDYwLDEsIkxvdy1kb3NlIGN5dGFyYWJpbmUgLSBmbGFnZ2VkLCBuZWVkcyBzaWduLW9mZiIKTUlUT1hBTlRST05FLDMsMSwKTVlMT1RBUkcsNywxLApORVhBVkFSLDE4LCxPcmFsIC0gUlggb25seQpPTlVSRUcsMjgsLE9yYWwgLSBSWCBvbmx5OyBJQy1pbmVsaWdpYmxlIChITUEpClJFWkxJREhJQSw2MCwsT3JhbCAtIFJYIG9ubHkKUllEQVBULDYwLCxPcmFsIC0gUlggb25seQpTLURBQyw3LDEsU3RhbmRhcmQtZG9zZSBjeXRhcmFiaW5lIC0gZmxhZ2dlZCAoZ3JhY2UgYXN5bW1ldHJ5KQpUSUJTT1ZPLDYwLCxPcmFsIC0gUlggb25seQpWQU5GTFlUQSwyOCwsT3JhbCAtIFJYIG9ubHkKVkVOQ0xFWFRBLDYwLCxPcmFsIC0gUlggb25seQpWSU5DUklTVElORSwyOCwxLApWWVhFT1MsNSwxLApYT1NQQVRBLDYwLCxPcmFsIC0gUlggb25seQ==" download="grace-dos-values.csv">Download CSV</a>
+      </div>
+
+      <h3>Excluded before assignment</h3>
+      <div class="tbl-flat">
+        <table class="dtbl">
+          <thead><tr><th>Product</th><th>Status</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td class="prod">FILGRASTIM</td><td><span class="tag tag-red">Excluded</span></td><td>Supportive care, not a treatment product — dropped before DOS/GRACE assignment so it can't create or extend a line of therapy.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="playground">
+      <span class="eyebrow">TRY IT YOURSELF</span>
+      <p class="lede">Each tile below explains the DOS and Grace impact on Episode, Regimen, and Line of Therapy — with sliders to play around with the values. Drag the inputs and watch the diagram itself explain what changed: a green tag means it joined, an amber tag means it started something new.</p>
+
+      <div class="cascade-wrap">
+        <div class="sticky-toolbar">
+          <div class="stb-ctrl">
+            <label>DOS</label>
+            <input type="range" id="stDosSlider" min="5" max="100" value="28" step="1">
+            <span class="stb-val" id="stDosVal">28d</span>
+          </div>
+          <div class="stb-ctrl">
+            <label>Grace</label>
+            <input type="range" id="stGraceSlider" min="5" max="100" value="60" step="1">
+            <span class="stb-val" id="stGraceVal">60d</span>
+          </div>
+          <div class="stb-summary" id="stSummary">2 episodes \u2192 5 regimen segments \u2192 2 lines</div>
+          <button class="reset-btn" id="stResetBtn">Reset</button>
+        </div>
+
+      <div class="play-shell">
+        <div class="tile-head">
+          <span class="tile-num">1</span>
+          <div><h4>Episode</h4><p>One product, Brand A. Consecutive fills join into an episode as long as the gap stays inside DOS combined with Grace — otherwise a new episode starts.</p></div>
+        </div>
+        <div class="ctrl-grid">
+          <div class="ctrl">
+            <div class="ctrl-top"><label>Days of Supply</label><span class="ctrl-val" id="t1DosVal">28 days</span></div>
+            <input type="range" id="t1DosSlider" min="5" max="100" value="28" step="1">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-top"><label>Grace period</label><span class="ctrl-val" id="t1GraceVal">60 days</span></div>
+            <input type="range" id="t1GraceSlider" min="5" max="100" value="60" step="1">
+          </div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="reset-btn" id="t1ResetBtn">Reset to 28 / 60</button>
+          </div>
+        </div>
+        <div class="ann-row" id="t1Ann"></div>
+        <div class="timeline" style="margin-top:0;">
+          <div class="tl-row"><div class="tl-label">Prescription start date</div><div class="tl-track fills-track" id="t1Rx"></div></div>
+          <div class="tl-row"><div class="tl-label">Episodes</div><div class="tl-track" id="t1Episodes"></div></div>
+          <div class="tl-axis" id="t1Axis"></div>
+        </div>
+        <p class="readout-line"><b id="t1EpCount">2</b> episodes formed</p>
+      </div>
+
+      <div class="play-shell" style="margin-top:20px;">
+        <div class="tile-head">
+          <span class="tile-num">2</span>
+          <div><h4>Regimen</h4><p>The episode above is what feeds this — no separate sliders here. Brand A's episodes, laid over fixed Brand B and Brand C schedules.</p></div>
+        </div>
+        <div class="brand-legend"><span><i style="background:var(--cdl)"></i>Brand A</span><span><i style="background:var(--amber)"></i>Brand B</span><span><i style="background:var(--green)"></i>Brand C</span><span><i style="background:var(--snow)"></i>2+ products together</span></div>
+        <div class="ann-row" id="t2Ann"></div>
+        <div class="timeline" style="margin-top:0;">
+          <div class="tl-row"><div class="tl-label">Prescription start date</div><div class="tl-track fills-track" id="t2Rx"></div></div>
+          <div class="tl-row"><div class="tl-label">Episodes (Brand A, from Tile 1)</div><div class="tl-track" id="t2Episodes"></div></div>
+          <div class="tl-row"><div class="tl-label">Episodes (Brand B, fixed)</div><div class="tl-track" id="t2EpisodesB"></div></div>
+          <div class="tl-row"><div class="tl-label">Episodes (Brand C, fixed)</div><div class="tl-track" id="t2EpisodesC"></div></div>
+          <div class="tl-row"><div class="tl-label">Regimen</div><div class="tl-track" id="t2Regimen"></div></div>
+          <div class="tl-axis" id="t2Axis"></div>
+        </div>
+        <p class="readout-line"><b id="t2RegCount">5</b> regimen segments</p>
+      </div>
+
+      <div class="play-shell" style="margin-top:20px;">
+        <div class="tile-head">
+          <span class="tile-num">3</span>
+          <div><h4>Line of Therapy</h4><p>The regimen above is what feeds this — no separate sliders here either. Backbone hierarchy is fixed at Brand B &gt; Brand A &gt; Brand C.</p></div>
+        </div>
+        <div class="brand-legend" style="margin-top:10px;"><span><i style="background:var(--cdl)"></i>Brand A</span><span><i style="background:var(--amber)"></i>Brand B</span><span><i style="background:var(--green)"></i>Brand C</span><span><i style="background:var(--snow)"></i>2+ products together</span></div>
+        <div class="timeline" style="margin-top:16px;">
+          <div class="tl-row"><div class="tl-label">Regimen (from Tile 2)</div><div class="tl-track" id="t3Regimen"></div></div>
+          <div class="tl-row"><div class="tl-label">Line of therapy</div><div class="tl-track" id="t3Line"></div></div>
+          <div class="tl-axis" id="t3Axis"></div>
+        </div>
+        <div class="seg-captions" id="t3Captions"></div>
+        <p class="readout-line"><b id="t3LineCount">2</b> lines of therapy</p>
+      </div>
+      </div>
+
+      <h3>A real, named exception: Venclexta and HMAs</h3>
+      <p class="lede">The generic example above shows the general rule. Real AML data has one specific carve-out to it, and it involves an actual named product: an illustrative patient on Venclexta, who then has an HMA added alongside it, then drops Venclexta entirely.</p>
+
+      <div class="play-shell">
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-label">Products active</div>
+            <div class="tl-track" id="rbRegimen"></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-label">Backbone</div>
+            <div class="tl-track" id="rbBackbone"></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-label">Line of therapy</div>
+            <div class="tl-track" id="rbLine"></div>
+          </div>
+          <div class="tl-axis" id="rbAxis"></div>
+        </div>
+
+        <p class="lede" id="rbText" style="margin-top:14px;font-size:13px;"></p>
+      </div>
+
+    </section>
+
+    <section id="next-steps">
+      <div class="next-card">
+        <h3>You've got the basics. Now ask the real questions.</h3>
+        <p>Brand A, B, and C were made up on purpose — built to teach the mechanism without any risk of mixing up what's illustrative and what's real. Now that DOS, Grace, Episode, Regimen, and Line of Therapy actually make sense, the natural next step is asking these same questions on the real data — and that's what Claude is for. Open a chat and just ask, in plain language. No code, no notebook.</p>
+      </div>
+    </section>
+
+    <div class="pagefoot">
+      <span><b>AbbVie Oncology</b> · Venclexta</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var items = Array.prototype.slice.call(document.querySelectorAll('.sb-item'));
+  var sections = items.map(function(it){ return document.getElementById(it.getAttribute('data-target')); });
+
+  items.forEach(function(it){
+    it.addEventListener('click', function(){
+      var el = document.getElementById(it.getAttribute('data-target'));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  function setActive(id){
+    items.forEach(function(it){ it.classList.toggle('active', it.getAttribute('data-target') === id); });
+  }
+
+  if('IntersectionObserver' in window){
+    var current = 'overview';
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ current = e.target.id; setActive(current); }
+      });
+    }, {rootMargin:'-64px 0px -70% 0px', threshold:0});
+    sections.forEach(function(s){ if(s) obs.observe(s); });
+  }
+  setActive('overview');
+})();
+</script>
+
+<script>
+(function(){
+  /* ---------- shared helpers ---------- */
+  var BASE_DATE = new Date(2026, 0, 5); // day 0 anchor, illustrative
+  function dateAt(day){
+    var d = new Date(BASE_DATE.getTime());
+    d.setDate(d.getDate() + day);
+    return d;
+  }
+  function monthLabel(day){
+    var d = dateAt(day);
+    return d.toLocaleDateString('en-US', {month:'short', year:'2-digit'});
+  }
+  function fullDate(day){
+    var d = dateAt(day);
+    return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  }
+
+  function buildEpisodes(fills, dos, grace){
+    var sorted = fills.slice().sort(function(a,b){return a-b;});
+    var episodes = [];
+    var start = sorted[0], end = sorted[0] + dos;
+    for (var i=1;i<sorted.length;i++){
+      var gap = sorted[i] - (sorted[i-1] + dos);
+      if (gap > grace){
+        episodes.push({start:start, end:end});
+        start = sorted[i]; end = sorted[i] + dos;
+      } else {
+        end = sorted[i] + dos;
+      }
+    }
+    episodes.push({start:start, end:end});
+    return episodes;
+  }
+
+  function buildLines(episodes){
+    var lines = [];
+    var lineStart = episodes[0].start, lineEnd = episodes[0].end;
+    var gapToNext = [];
+    for (var i=1;i<episodes.length;i++){
+      var gap = episodes[i].start - lineEnd;
+      if (gap > 90){
+        lines.push({start:lineStart, end:lineEnd});
+        gapToNext.push(gap);
+        lineStart = episodes[i].start; lineEnd = episodes[i].end;
+      } else {
+        lineEnd = episodes[i].end;
+      }
+    }
+    lines.push({start:lineStart, end:lineEnd});
+    return {lines:lines, gaps:gapToNext};
+  }
+
+  /* ---------- shared helpers ---------- */
+  function computeRegimens(episodesByDrug){
+    var breakpoints = {};
+    Object.keys(episodesByDrug).forEach(function(drug){
+      episodesByDrug[drug].forEach(function(ep){ breakpoints[ep.start]=1; breakpoints[ep.end]=1; });
+    });
+    var points = Object.keys(breakpoints).map(Number).sort(function(a,b){return a-b;});
+    var segments = [];
+    for (var i=0;i<points.length-1;i++){
+      var segStart = points[i], segEnd = points[i+1];
+      var mid = (segStart+segEnd)/2;
+      var active = [];
+      Object.keys(episodesByDrug).forEach(function(drug){
+        var covered = episodesByDrug[drug].some(function(ep){ return mid>=ep.start && mid<ep.end; });
+        if (covered) active.push(drug);
+      });
+      if (active.length>0) segments.push({start:segStart, end:segEnd, drugs:active.sort()});
+    }
+    var merged = [];
+    segments.forEach(function(s){
+      var key = s.drugs.join('+');
+      var last = merged[merged.length-1];
+      if (last && last.key===key && last.end===s.start){ last.end = s.end; }
+      else merged.push({start:s.start, end:s.end, key:key, drugs:s.drugs});
+    });
+    return merged;
+  }
+
+  function mergeByKey(segs, keyFn, labelFn){
+    var out = [];
+    segs.forEach(function(s){
+      var key = keyFn(s);
+      var last = out[out.length-1];
+      if (last && last.key===key && last.end===s.start){ last.end = s.end; }
+      else out.push({start:s.start, end:s.end, key:key, label:labelFn(s)});
+    });
+    return out;
+  }
+
+  function renderRowP(el, segs, pctFn, colorFn){
+    el.innerHTML = '';
+    segs.forEach(function(s){
+      var bar = document.createElement('div');
+      var widthPct = Math.max(pctFn(s.end)-pctFn(s.start), 2.2);
+      bar.className = 'tl-seg '+colorFn(s);
+      bar.style.left = pctFn(s.start)+'%';
+      bar.style.width = widthPct+'%';
+      bar.title = s.title || s.label;
+      var neededPct = (s.label.length * 7 + 16) / 950 * 100;
+      if (widthPct >= neededPct) bar.textContent = s.label;
+      el.appendChild(bar);
+    });
+  }
+
+  function renderAxisP(el, pctFn, ticks){
+    el.innerHTML = '';
+    ticks.forEach(function(d){
+      var lbl = document.createElement('span');
+      lbl.style.left = pctFn(d)+'%'; lbl.textContent = 'Day '+d;
+      el.appendChild(lbl);
+    });
+  }
+
+  function fullNameFor(key){
+    return key.split('+').map(function(d){ return 'Brand '+d; }).join(' + ');
+  }
+  function colorForRegimen(key){
+    if (key.length>1) return 'seg-snow';
+    if (key==='A') return 'seg-cdl';
+    if (key==='C') return 'seg-green';
+    return 'seg-amber';
+  }
+
+  /* ================= ONE SHARED PIPELINE: Episode \u2192 Regimen \u2192 Line of Therapy ================= */
+  var PG_TOTAL = 420;
+  function pctPG(day){ return Math.max(0, Math.min(100, (day/PG_TOTAL)*100)); }
+
+  var A_FILLS = [0,28,56,84,200,228,256];
+  var C_FILLS = [40,68];
+  var B_FILLS = [290,318,346,374];
+  var C_DOS=28, C_GRACE=60, B_DOS=28, B_GRACE=60;
+  function backboneBAC(drugs){ // fixed priority: Brand B > Brand A > Brand C
+    var rank = {B:1,A:2,C:3}; var best=null;
+    drugs.forEach(function(d){ if(best===null||rank[d]<rank[best]) best=d; });
+    return best;
+  }
+
+  function renderPipeline(){
+    var dos = parseInt(document.getElementById('t1DosSlider').value,10);
+    var grace = parseInt(document.getElementById('t1GraceSlider').value,10);
+    document.getElementById('t1DosVal').textContent = dos+' days';
+    document.getElementById('t1GraceVal').textContent = grace+' days';
+    document.getElementById('stDosVal').textContent = dos+'d';
+    document.getElementById('stGraceVal').textContent = grace+'d';
+
+    /* ---- Episode (Brand A) ---- */
+    var sorted = A_FILLS.slice();
+    var aEp = []; var newEpisodePoints = [];
+    var start = sorted[0], end = sorted[0]+dos;
+    for (var i=1;i<sorted.length;i++){
+      var rawGap = sorted[i] - sorted[i-1];
+      var joins = rawGap <= (dos+grace);
+      if (!joins){
+        newEpisodePoints.push({mid:(sorted[i-1]+sorted[i])/2, rawGap:rawGap});
+        aEp.push({start:start,end:end}); start = sorted[i]; end = sorted[i]+dos;
+      } else { end = sorted[i]+dos; }
+    }
+    aEp.push({start:start,end:end});
+
+    var rxEl1 = document.getElementById('t1Rx');
+    rxEl1.innerHTML = '';
+    A_FILLS.forEach(function(d){
+      var dot=document.createElement('div'); dot.className='tl-dot';
+      dot.style.left=pctPG(d)+'%'; dot.title='Brand A, Day '+d;
+      rxEl1.appendChild(dot);
+    });
+    renderRowP(document.getElementById('t1Episodes'), aEp.map(function(e,i){ return {start:e.start,end:e.end,label:'Episode '+(i+1)}; }), pctPG, function(){ return 'seg-cdl'; });
+    renderAxisP(document.getElementById('t1Axis'), pctPG, [0,60,120,180,240,300,360,420]);
+    var ann1 = document.getElementById('t1Ann');
+    ann1.innerHTML = '';
+    newEpisodePoints.forEach(function(g){
+      var chip = document.createElement('span');
+      chip.className = 'ann-chip over';
+      chip.style.left = pctPG(g.mid)+'%';
+      chip.textContent = 'gap '+g.rawGap+'d > DOS combined with Grace ('+(dos+grace)+'d) \u2192 new episode';
+      ann1.appendChild(chip);
+    });
+    document.getElementById('t1EpCount').textContent = aEp.length;
+
+    /* ---- Regimen (Brand A's episode above + fixed Brand B, Brand C) ---- */
+    var cEp = buildEpisodes(C_FILLS, C_DOS, C_GRACE);
+    var bEp = buildEpisodes(B_FILLS, B_DOS, B_GRACE);
+    var regimens = computeRegimens({A:aEp, B:bEp, C:cEp});
+
+    var rxEl2 = document.getElementById('t2Rx');
+    rxEl2.innerHTML = '';
+    A_FILLS.forEach(function(d){ var dot=document.createElement('div'); dot.className='tl-dot'; dot.style.left=pctPG(d)+'%'; dot.style.background='var(--cdl)'; dot.title='Brand A, Day '+d; rxEl2.appendChild(dot); });
+    C_FILLS.forEach(function(d){ var dot=document.createElement('div'); dot.className='tl-dot'; dot.style.left=pctPG(d)+'%'; dot.style.background='var(--green)'; dot.title='Brand C, Day '+d; rxEl2.appendChild(dot); });
+    B_FILLS.forEach(function(d){ var dot=document.createElement('div'); dot.className='tl-dot'; dot.style.left=pctPG(d)+'%'; dot.style.background='var(--amber)'; dot.title='Brand B, Day '+d; rxEl2.appendChild(dot); });
+
+    renderRowP(document.getElementById('t2Episodes'), aEp.map(function(e,i){ return {start:e.start,end:e.end,label:'Ep. '+(i+1)}; }), pctPG, function(){ return 'seg-cdl'; });
+    renderRowP(document.getElementById('t2EpisodesC'), cEp.map(function(e,i){ return {start:e.start,end:e.end,label:'C ep. '+(i+1)}; }), pctPG, function(){ return 'seg-green'; });
+    renderRowP(document.getElementById('t2EpisodesB'), bEp.map(function(e,i){ return {start:e.start,end:e.end,label:'B ep. '+(i+1)}; }), pctPG, function(){ return 'seg-amber'; });
+    renderRowP(document.getElementById('t2Regimen'), regimens.map(function(s){ return {start:s.start,end:s.end,label:s.key,title:fullNameFor(s.key),key:s.key}; }), pctPG, function(s){ return colorForRegimen(s.key); });
+    renderAxisP(document.getElementById('t2Axis'), pctPG, [0,60,120,180,240,300,360,420]);
+
+    // annotate the specific gap that will decide Line of Therapy next
+    var lastAAlone = null, firstAfterGap = null;
+    for (var r=0;r<regimens.length;r++){
+      if (regimens[r].key==='A' && regimens[r+1] && regimens[r+1].start > regimens[r].end){
+        lastAAlone = regimens[r]; firstAfterGap = regimens[r+1]; break;
+      }
+    }
+    var ann2 = document.getElementById('t2Ann');
+    ann2.innerHTML = '';
+    var criticalGap = null;
+    if (lastAAlone && firstAfterGap){
+      criticalGap = firstAfterGap.start - lastAAlone.end;
+      var chip2 = document.createElement('span');
+      chip2.className = 'ann-chip '+(criticalGap>90?'over':'ok');
+      chip2.style.left = pctPG((lastAAlone.end+firstAfterGap.start)/2)+'%';
+      chip2.textContent = 'gap '+criticalGap+'d \u2192 feeds into Line of Therapy';
+      ann2.appendChild(chip2);
+    }
+    document.getElementById('t2RegCount').textContent = regimens.length;
+
+    /* ---- Line of Therapy (the regimen above, exactly, fixed backbone order B>A>C) ---- */
+    var line=1, prevBB=null, prevEnd=null;
+    var lined = regimens.map(function(s){
+      var bb = backboneBAC(s.key.split('+'));
+      if (prevEnd!==null){ var g=s.start-prevEnd; if (g>90||bb!==prevBB) line++; }
+      var out = {start:s.start,end:s.end,key:s.key,backbone:bb,line:line};
+      prevBB=bb; prevEnd=s.end;
+      return out;
+    });
+
+    renderRowP(document.getElementById('t3Regimen'), lined.map(function(s){ return {start:s.start,end:s.end,label:s.key,title:fullNameFor(s.key),key:s.key}; }), pctPG, function(s){ return colorForRegimen(s.key); });
+    var lineRow = mergeByKey(lined, function(s){ return s.line; }, function(s){ return 'Line '+s.line; });
+    renderRowP(document.getElementById('t3Line'), lineRow, pctPG, function(s){ return ['seg-cdl','seg-snow','seg-amber'][(s.key-1)%3]; });
+    renderAxisP(document.getElementById('t3Axis'), pctPG, [0,60,120,180,240,300,360,420]);
+
+    var capEl = document.getElementById('t3Captions');
+    capEl.innerHTML = '';
+    function cap(seg, text){
+      var d = document.createElement('div');
+      d.className = 'seg-cap';
+      var widthPct = Math.max(pctPG(seg.end)-pctPG(seg.start), 6);
+      d.style.flex = '0 0 '+widthPct+'%';
+      d.innerHTML = text;
+      capEl.appendChild(d);
+    }
+    function describeChange(prevKey, curKey){
+      if (prevKey===curKey) return null;
+      var prevDrugs = prevKey.split('+'), curDrugs = curKey.split('+');
+      var added = curDrugs.filter(function(d){ return prevDrugs.indexOf(d)===-1; });
+      var removed = prevDrugs.filter(function(d){ return curDrugs.indexOf(d)===-1; });
+      var bits = [];
+      added.forEach(function(d){ bits.push('Brand '+d+' joins'); });
+      removed.forEach(function(d){ bits.push('Brand '+d+' drops off'); });
+      return bits.join(', ');
+    }
+    for (var s=0;s<lined.length;s++){
+      var seg = lined[s], prev = lined[s-1];
+      if (!prev){ cap(seg, '<b>Backbone '+seg.backbone+'</b> \u2014 begins Line 1'); continue; }
+      var gapHere = seg.start - prev.end;
+      var change = describeChange(prev.key, seg.key);
+      if (seg.backbone===prev.backbone && gapHere<=90){
+        cap(seg, (change || 'gap '+gapHere+'d \u2264 90d') + ' \u2014 same line');
+      } else if (seg.backbone!==prev.backbone && gapHere<=90){
+        cap(seg, '<b>'+change+'</b> \u2014 starts Line '+seg.line);
+      } else {
+        cap(seg, '<b>gap '+gapHere+'d > 90d</b>'+(change?' ('+change+')':'')+' \u2014 starts Line '+seg.line);
+      }
+    }
+
+    document.getElementById('t3LineCount').textContent = lined[lined.length-1].line;
+
+    var totalLinesNum = lined[lined.length-1].line;
+    document.getElementById('stSummary').innerHTML = '<b>'+aEp.length+'</b> episode'+(aEp.length!==1?'s':'')+' \u2192 <b>'+regimens.length+'</b> regimen segments \u2192 <b>'+totalLinesNum+'</b> line'+(totalLinesNum!==1?'s':'');
+  }
+
+  var dosSliders = [document.getElementById('t1DosSlider'), document.getElementById('stDosSlider')];
+  var graceSliders = [document.getElementById('t1GraceSlider'), document.getElementById('stGraceSlider')];
+
+  function onDosInput(e){
+    dosSliders.forEach(function(s){ if (s!==e.target) s.value = e.target.value; });
+    renderPipeline();
+  }
+  function onGraceInput(e){
+    graceSliders.forEach(function(s){ if (s!==e.target) s.value = e.target.value; });
+    renderPipeline();
+  }
+  dosSliders.forEach(function(s){ s.addEventListener('input', onDosInput); });
+  graceSliders.forEach(function(s){ s.addEventListener('input', onGraceInput); });
+
+  function resetAllSliders(){
+    dosSliders.forEach(function(s){ s.value = 28; });
+    graceSliders.forEach(function(s){ s.value = 60; });
+    renderPipeline();
+  }
+  document.getElementById('t1ResetBtn').addEventListener('click', resetAllSliders);
+  document.getElementById('stResetBtn').addEventListener('click', resetAllSliders);
+  renderPipeline();
+
+  /* ---------- regimen & backbone mini example ---------- */
+  function renderRegimenBackbone(){
+    var TOTAL = 230;
+    function pctRB(day){ return Math.max(0, Math.min(100,(day/TOTAL)*100)); }
+    function bar(container, start, end, label, cls){
+      var el = document.createElement('div');
+      el.className = 'tl-seg '+cls;
+      el.style.left = pctRB(start)+'%';
+      el.style.width = Math.max(pctRB(end)-pctRB(start), 2)+'%';
+      el.textContent = label;
+      container.appendChild(el);
+    }
+
+    var regEl = document.getElementById('rbRegimen');
+    regEl.innerHTML = '';
+    bar(regEl, 0, 70, 'Venclexta', 'seg-cdl');
+    bar(regEl, 70, 144, 'Venclexta + HMA', 'seg-snow');
+    bar(regEl, 144, 230, 'HMA', 'seg-amber');
+
+    var bbEl = document.getElementById('rbBackbone');
+    bbEl.innerHTML = '';
+    bar(bbEl, 0, 144, 'Backbone: Venclexta', 'seg-cdl');
+    bar(bbEl, 144, 230, 'Backbone: HMA', 'seg-amber');
+
+    var lineEl = document.getElementById('rbLine');
+    lineEl.innerHTML = '';
+    bar(lineEl, 0, 230, 'Line 1', 'seg-cdl');
+
+    var axisEl = document.getElementById('rbAxis');
+    axisEl.innerHTML = '';
+    [0,70,144,230].forEach(function(d){
+      var lbl = document.createElement('span');
+      lbl.style.left = pctRB(d)+'%';
+      lbl.textContent = 'Day '+d;
+      axisEl.appendChild(lbl);
+    });
+
+    document.getElementById('rbText').innerHTML = 'Notice the regimen changes twice (Venclexta \u2192 Venclexta+HMA \u2192 HMA), but the backbone only changes once \u2014 adding the HMA doesn\u2019t unseat Venclexta, since Venclexta outranks it. When Venclexta later drops off, backbone does shift to the HMA. Normally that would start a new line \u2014 but a Venclexta \u2194 HMA switch is specifically exempted, so this stays <b>one continuous Line 1</b> throughout.';
+  }
+
+  renderRegimenBackbone();
+
+  /* ---------- interactive search ---------- */
+  var SEARCH_INDEX = [
+    {term:'dos',     tag:'TERM', name:'DOS — Days of Supply',      desc:'How many days a single fill is assumed to cover.'},
+    {term:'grace',   tag:'TERM', name:'Grace period',               desc:'Extra days beyond DOS still called "still on treatment."'},
+    {term:'episode', tag:'TERM', name:'Episode',                    desc:'A run of fills for the same drug, glued together.'},
+    {term:'regimen', tag:'TERM', name:'Regimen',                    desc:'Whichever drug(s) are active at the same time.'},
+    {term:'lot',     tag:'TERM', name:'Line of therapy (LOT)',      desc:'A run of regimens counted as one continuous course.'},
+    {term:'nps',     tag:'KPI',  name:'NPS — New Patient Starts',   desc:'How many patients begin their very first line, by month.'}
+  ];
+
+  var searchInput = document.getElementById('glossarySearch');
+  var searchResults = document.getElementById('searchResults');
+
+  function closeSearch(){ searchResults.classList.remove('open'); searchResults.innerHTML = ''; }
+
+  function renderSearch(q){
+    var matches = SEARCH_INDEX.filter(function(item){
+      return item.name.toLowerCase().indexOf(q) !== -1 || item.desc.toLowerCase().indexOf(q) !== -1;
+    });
+    searchResults.innerHTML = '';
+    if (matches.length === 0){
+      var empty = document.createElement('div');
+      empty.className = 'sr-empty';
+      empty.textContent = 'No terms match \u201c'+q+'\u201d.';
+      searchResults.appendChild(empty);
+    } else {
+      matches.forEach(function(item){
+        var row = document.createElement('div');
+        row.className = 'sr-item';
+        row.innerHTML = '<span class="sr-tag'+(item.tag==='KPI'?' kpi':'')+'">'+item.tag+'</span>'
+          + '<span class="sr-body"><b>'+item.name+'</b><p>'+item.desc+'</p></span>';
+        row.addEventListener('click', function(){
+          var card = document.querySelector('.term-card[data-term="'+item.term+'"]');
+          if (card){
+            card.scrollIntoView({behavior:'smooth', block:'center'});
+            card.classList.remove('flash');
+            void card.offsetWidth; // restart animation if clicked twice
+            card.classList.add('flash');
+          }
+          searchInput.value = '';
+          closeSearch();
+        });
+        searchResults.appendChild(row);
+      });
+    }
+    searchResults.classList.add('open');
+  }
+
+  searchInput.addEventListener('input', function(){
+    var q = searchInput.value.trim().toLowerCase();
+    if (q === '') { closeSearch(); return; }
+    renderSearch(q);
+  });
+  searchInput.addEventListener('focus', function(){
+    var q = searchInput.value.trim().toLowerCase();
+    if (q !== '') renderSearch(q);
+  });
+  document.addEventListener('click', function(e){
+    var wrap = document.querySelector('.tb-search');
+    if (wrap && !wrap.contains(e.target)) closeSearch();
+  });
+})();
+</script>
+
+</body>
+</html>
